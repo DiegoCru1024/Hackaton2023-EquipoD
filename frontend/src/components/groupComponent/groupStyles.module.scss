@@ -11,7 +11,12 @@
     flex-direction: column;
   }
 
-  button {
+  a {
     grid-area: 1 / 6 / 2 / 7;
+    display: flex;
+
+    button {
+      width: 100%;
+    }
   }
 }

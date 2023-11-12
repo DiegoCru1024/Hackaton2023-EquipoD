@@ -73,7 +73,9 @@ export default function GroupComponent() {
                     <label>Semestre Activo</label>
                     <input type={'text'} readOnly={true}/>
                 </div>
-                <button>Crear Grupos</button>
+                <Link to={'/group/create'}>
+                    <button>Crear Grupo</button>
+                </Link>
             </div>
             <table>
                 <thead>
