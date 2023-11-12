@@ -11,10 +11,10 @@ public class CourseDictationTypeRepository : GenericRepository<CourseDictationTy
     {
     }
 
-    public override async Task<CourseDictationType?> GetByIdAsync(int id)
+    public override async Task<IEnumerable<CourseDictationType>> GetAllAsync()
     {
         return await DbSet.Include(x => x.CourseHoursDictateds)
             .ThenInclude(y => y.Course)
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .ToListAsync();
     }
 }
