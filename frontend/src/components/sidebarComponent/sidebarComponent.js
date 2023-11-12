@@ -4,6 +4,7 @@ import {HiUserCircle} from "react-icons/hi2";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {clearUser} from "../../redux/userSlice";
+import {AiFillHome} from "react-icons/ai";
 
 export default function SideBar() {
     const userData = useSelector((state) => state.userData)
@@ -26,16 +27,19 @@ export default function SideBar() {
                 </div>
 
                 <ul className={styles.navBar}>
-                    <li><Link to={'/dashboard'}>
-                        <HiHome className={styles.navBarIcon}/> Dashboard</Link>
+                    <li><Link to={'/'}>
+                        <AiFillHome className={styles.navBarIcon}/> Inicio</Link>
                     </li>
 
                     <li><Link to={'/requestList'}>
-                        <HiClipboardList className={styles.navBarIcon}/> Lista de Solicitudes</Link>
+                        <HiClipboardList className={styles.navBarIcon}/> Semestre</Link>
                     </li>
 
                     <li><Link to={'/repairRequest'}>
-                        <HiInformationCircle className={styles.navBarIcon}/> Solucitud por Plataforma</Link>
+                        <HiInformationCircle className={styles.navBarIcon}/> Grupos</Link>
+                    </li>
+                    <li><Link to={'/repairRequest'}>
+                        <HiInformationCircle className={styles.navBarIcon}/> Aulas</Link>
                     </li>
                 </ul>
             </div>
