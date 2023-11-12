@@ -13,7 +13,7 @@ const iconStyle = {color: "#002388", fontSize: 30, marginRight: 5};
 const LoginPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const messageMediator = new MessageMediator
+    const messageMediator = new MessageMediator()
     const [waitingResponse, setWaitingResponse] = useState(false);
     const [loginData, setLoginData] = useState({
         email: "",
