@@ -1,5 +1,5 @@
 import styles from './sidebarStyles.module.scss'
-import {HiClipboardList, HiHome, HiInformationCircle} from "react-icons/hi";
+import {HiClipboardList, HiInformationCircle} from "react-icons/hi";
 import {HiUserCircle} from "react-icons/hi2";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
