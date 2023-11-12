@@ -1,24 +1,33 @@
-import React, { useState } from 'react';
-import CreateSemesterComponent from './subComponents/createSemesterComponent';
-import DetailSemesterComponent from './subComponents/detailSemesterComponent';
-import UpdateSemesterComponent from './subComponents/updateSemesterComponent';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import CreateSemesterComponent from "./subComponents/createSemesterComponent";
+import DetailSemesterComponent from "./subComponents/detailSemesterComponent";
+import UpdateSemesterComponent from "./subComponents/updateSemesterComponent";
 
 const SemesterComponent = () => {
-  const [currentSemesterDetails, setCurrentSemesterDetails] = useState({
-    name: 'Semestre de Ejemplo',
-    startDate: '2023-01-01',
-    endDate: '2023-06-30',
+  const [currentSemesterDetails, setCurrentSemesterDetails] = React.useState({
+    name: "Semestre de Ejemplo",
+    startDate: "2023-01-01",
+    endDate: "2023-06-30",
   });
 
+  const navigate = useNavigate();
+
   const handleUpdateSemester = (updatedSemesterDetails) => {
-    console.log('Semester Updated:', updatedSemesterDetails);
+    console.log("Semester Updated:", updatedSemesterDetails);
     setCurrentSemesterDetails(updatedSemesterDetails);
   };
 
+  const navigateToCreateSemester = () => {
+    navigate("/semester/create"); // Ruta a la página de creación
+  };
+
   return (
-    <div style={{overflowY:"scroll", height:"100vh", width:"85vw"}}>
+    <div>
       <h1>Crear Semestre</h1>
-      <CreateSemesterComponent />
+      <button onClick={navigateToCreateSemester}>
+        Ir a Crear Semestre
+      </button>
       <hr />
       <DetailSemesterComponent semesterDetails={currentSemesterDetails} />
       <hr />
