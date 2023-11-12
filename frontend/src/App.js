@@ -4,6 +4,7 @@ import LoginComponent from "./components/loginComponent/loginComponent";
 import HomeComponent from "./components/homeComponent/homeComponent";
 import SemesterComponent from "./components/semesterComponent/semesterComponent";
 import './globalStyles.scss';
+import GroupComponent from "./components/groupComponent/groupComponent";
 
 const SidebarLayout = ({children}) => (
     <div className={'appContainer'}>
@@ -30,7 +31,7 @@ function App() {
                 />
                 <Route
                     path={'/group'}
-                    element={<SidebarLayout><SemesterComponent/></SidebarLayout>}
+                    element={<SidebarLayout><GroupComponent/></SidebarLayout>}
                 />
                 <Route
                     path={'/classroom'}
