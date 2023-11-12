@@ -63,7 +63,7 @@ function App() {
                     }
                 />
                 <Route
-                    path={"/group/update/:id"}
+                    path={"/group/update/:groupID"}
                     element={
                         <SidebarLayout>
                             <UpdateGroupComponent/>
