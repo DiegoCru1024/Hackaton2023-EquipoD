@@ -72,6 +72,19 @@ input {
   }
 }
 
+input[readonly] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(226 232 240 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity));
+  cursor: pointer;
+
+  &::placeholder {
+    --tw-text-opacity: 1;
+    color: rgb(148 163 184 / var(--tw-text-opacity));
+  }
+}
+
 select {
   height: 25px;
   display: block;
