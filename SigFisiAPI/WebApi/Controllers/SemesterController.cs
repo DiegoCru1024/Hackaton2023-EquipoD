@@ -35,4 +35,32 @@ public class SemesterController : ControllerBase
         var semesters = await _semesterService.GetAllSemestersAsync();
         return Ok(semesters);
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateSemester(int id, [FromBody] UpdateSemester updateSemester)
+    {
+        var semester = await _semesterService.UpdateSemesterAsync(id, updateSemester);
+        return Ok(semester);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteSemester(int id)
+    {
+        await _semesterService.DeleteSemesterAsync(id);
+        return NoContent();
+    }
+
+    [HttpPut("{id}/Deactivate")]
+    public async Task<IActionResult> DeactivateSemester(int id)
+    {
+        await _semesterService.DeactivateSemesterAsync(id);
+        return Ok();
+    }
+
+    [HttpPut("{id}/Activate")]
+    public async Task<IActionResult> ActivateSemester(int id)
+    {
+        await _semesterService.ActivateSemesterAsync(id);
+        return Ok();
+    }
 }

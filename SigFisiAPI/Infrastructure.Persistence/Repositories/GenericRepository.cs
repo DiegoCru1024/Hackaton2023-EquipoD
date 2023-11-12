@@ -40,4 +40,9 @@ public class GenericRepository<T> : IGenericRepository <T> where T : class
     {
         return await DbSet.ToListAsync();
     }
+
+    public virtual async Task DeleteAsync(T entity)
+    {
+        await Task.Run(() => DbSet.Remove(entity));
+    }
 }

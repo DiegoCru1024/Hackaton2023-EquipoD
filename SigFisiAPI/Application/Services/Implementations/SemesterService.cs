@@ -70,4 +70,80 @@ public class SemesterService : ISemesterService
             IsActive = x.IsActive
         });
     }
+
+    public async Task<GetSemester> UpdateSemesterAsync(int id, UpdateSemester updateSemester)
+    {
+        var semester = await _unitOfWork.Semesters.GetByIdAsync(id);
+
+        if (semester == null)
+        {
+            throw new AppException("No se encontro la el grupo");
+        }
+
+        semester.Code = updateSemester.Code;
+        semester.StartDate = updateSemester.StartDate;
+        semester.EndDate = updateSemester.EndDate;
+
+        var updatedSemester = await _unitOfWork.Semesters.UpdateAsync(semester);
+
+        await _unitOfWork.CommitAsync();
+
+        return new GetSemester()
+        {
+            Id = updatedSemester.Id,
+            Code = updatedSemester.Code,
+            StartDate = updatedSemester.StartDate,
+            EndDate = updatedSemester.EndDate,
+            IsActive = updatedSemester.IsActive
+        };
+    }
+
+    public async Task DeleteSemesterAsync(int id)
+    {
+        var semester = await _unitOfWork.Semesters.GetByIdAsync(id);
+
+        if (semester == null)
+        {
+            throw new AppException("No se encontro el semestre");
+        }
+
+        var hasGroups = await _unitOfWork.Semesters.HasGroups(id);
+
+        if (hasGroups)
+        {
+            throw new AppException("No se puede eliminar el semestre porque tiene grupos asociados");
+        }
+
+        await _unitOfWork.Semesters.DeleteAsync(semester);
+
+        await _unitOfWork.CommitAsync();
+    }
+
+    public async Task DeactivateSemesterAsync(int id)
+    {
+        var semester = await _unitOfWork.Semesters.GetByIdAsync(id);
+
+        if (semester == null)
+        {
+            throw new AppException("No se encontro el semestre");
+        }
+
+        semester.IsActive = false;
+
+        await _unitOfWork.CommitAsync();
+    }
+
+    public async Task ActivateSemesterAsync(int id)
+    {
+        var semester = await _unitOfWork.Semesters.GetByIdAsync(id);
+
+        if (semester == null)
+        {
+            throw new AppException("No se encontro el semestre");
+        }
+
+        semester.IsActive = true;
+
+        await _unitOfWork.CommitAsync();
+    }
 }
