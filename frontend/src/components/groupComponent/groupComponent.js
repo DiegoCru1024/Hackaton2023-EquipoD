@@ -1,40 +1,84 @@
 import styles from './groupStyles.module.scss'
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 export default function GroupComponent() {
+    const [componentState, setComponentState] = useState('read')
     const [semesterInfo, setSemesterInfo] = useState({
-        active: '2023-II'
+        semesterID: 1,
+        semesterName: '2023-II'
     })
+
+    const updateState = (newState) => {
+        setComponentState(newState)
+    }
+
+    const getSemesterInfo = async (e) => {
+        const url = '/getActiveSemesterInfo'
+
+        try {
+            const response = await axios.get(url)
+            setSemesterInfo(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        getSemesterInfo().then(() => {
+            console.log('Datos semestre...')
+        })
+    }, [])
 
     return (
         <div className={'componentContainer'}>
-            <h1>Crear Grupos</h1>
-            <div className={styles.semesterInfoContainer}>
-                <div>
-                    <label>Semestre Activo:</label>
-                    <input value={semesterInfo.active} readOnly={true}/>
-                </div>
-                <div>
-                    <label>Ciclo:</label>
-                    <select>
-                        <option>-- Seleccione un ciclo --</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                        <option>10</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Semestre Activo:</label>
-                    <input value={semesterInfo.active}/>
-                </div>
+            <h1>Grupos de Curso</h1>
+            <div>
+                <button>Crear Grupos</button>
             </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Grupo</th>
+                    <th>Semestre</th>
+                    <th>Curso</th>
+                    <th>Capacidad</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                </tr>
+                <tr>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                </tr>
+                <tr>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                </tr>
+                <tr>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                </tr>
+                <tr>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     )
 }
