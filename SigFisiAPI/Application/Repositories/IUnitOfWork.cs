@@ -9,5 +9,6 @@ public interface IUnitOfWork : IDisposable
     ISemesterRepository Semesters { get; set; }
     ICourseRepository Courses { get; set; }
     IStudyPlanRepository StudyPlans { get; set; }
+    ICourseDictationTypeRepository CourseDictationTypes { get; set; }
     Task CommitAsync();
 }

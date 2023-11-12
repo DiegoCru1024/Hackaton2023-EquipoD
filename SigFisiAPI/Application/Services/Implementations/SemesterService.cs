@@ -15,13 +15,13 @@ public class SemesterService : ISemesterService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<GetSemester> CreateSemesterAsync(CreateSemester createSemester)
+    public async Task<GetSemester> CreateSemesterAsync(CreateSemester model)
     {
         var semester = new Semester
         {
-            Code = createSemester.Code,
-            StartDate = createSemester.StartDate,
-            EndDate = createSemester.EndDate,
+            Code = model.Code,
+            StartDate = model.StartDate,
+            EndDate = model.EndDate,
             IsActive = true
         };
 
@@ -71,7 +71,7 @@ public class SemesterService : ISemesterService
         });
     }
 
-    public async Task<GetSemester> UpdateSemesterAsync(int id, UpdateSemester updateSemester)
+    public async Task<GetSemester> UpdateSemesterAsync(int id, UpdateSemester model)
     {
         var semester = await _unitOfWork.Semesters.GetByIdAsync(id);
 
@@ -80,9 +80,9 @@ public class SemesterService : ISemesterService
             throw new AppException("No se encontro la el grupo");
         }
 
-        semester.Code = updateSemester.Code;
-        semester.StartDate = updateSemester.StartDate;
-        semester.EndDate = updateSemester.EndDate;
+        semester.Code = model.Code;
+        semester.StartDate = model.StartDate;
+        semester.EndDate = model.EndDate;
 
         var updatedSemester = await _unitOfWork.Semesters.UpdateAsync(semester);
 

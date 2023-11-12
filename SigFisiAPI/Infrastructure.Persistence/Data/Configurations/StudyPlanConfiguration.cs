@@ -24,7 +24,7 @@ public class StudyPlanConfiguration : IEntityTypeConfiguration<StudyPlan>
             .HasColumnName("plaest_vcCodigo")
             .HasColumnType("VARCHAR(8)");
 
-        builder.Property(x => x.RR)
+        builder.Property(x => x.Rr)
             .HasColumnName("plaest_vcRR")
             .HasColumnType("VARCHAR(16)");
 

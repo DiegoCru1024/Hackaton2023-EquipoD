@@ -7,17 +7,17 @@ namespace WebApi.Controllers;
 [Route("api/[controller]")]
 public class StudyPlanController : ControllerBase
 {
-    private readonly IStudyPlanService StudyPlanService;
+    private readonly IStudyPlanService _studyPlanService;
 
     public StudyPlanController(IStudyPlanService studyPlanService)
     {
-        StudyPlanService = studyPlanService;
+        _studyPlanService = studyPlanService;
     }
 
     [HttpGet("All")]
     public async Task<IActionResult> GetAllStudyPlans()
     {
-        var studyPlans = await StudyPlanService.GetAllStudyPlansAsync();
+        var studyPlans = await _studyPlanService.GetAllStudyPlansAsync();
         return Ok(studyPlans);
     }
 

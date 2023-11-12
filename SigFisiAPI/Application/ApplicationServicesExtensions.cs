@@ -1,4 +1,3 @@
-using System.Reflection;
 using Application.Services;
 using Application.Services.Implementations;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +14,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<ISemesterService, SemesterService>();
         services.AddScoped<IStudyPlanService, StudyPlanService>();
         services.AddScoped<ICourseService, CourseService>();
+        services.AddScoped<ICourseDictationTypeService, CourseDictationTypeService>();
         #endregion
 
         return services;
