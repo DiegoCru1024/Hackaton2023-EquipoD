@@ -8,6 +8,7 @@ import HomeComponent from "./components/homeComponent/homeComponent";
 import './globalStyles.scss';
 import GroupComponent from "./components/groupComponent/groupComponent";
 import CreateGroupComponent from "./components/groupComponent/subcomponents/createGroupComponent";
+import UpdateGroupComponent from "./components/groupComponent/subcomponents/updateGroupComponent";
 
 const SidebarLayout = ({children}) => (
     <div className={"appContainer"}>
@@ -58,6 +59,14 @@ function App() {
                     element={
                         <SidebarLayout>
                             <CreateGroupComponent/>
+                        </SidebarLayout>
+                    }
+                />
+                <Route
+                    path={"/group/update/:id"}
+                    element={
+                        <SidebarLayout>
+                            <UpdateGroupComponent/>
                         </SidebarLayout>
                     }
                 />
