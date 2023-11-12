@@ -15,8 +15,15 @@ export default function GroupComponent() {
                     <input value={semesterInfo.active}/>
                 </div>
                 <div>
-                    <label>Semestre Activo:</label>
-                    <input value={semesterInfo.active}/>
+                    <label>Ciclo:</label>
+                    <select>
+                        <option>asd</option>
+                        <option>asd</option>
+                        <option>asd</option>
+                        <option>asd</option>
+                        <option>asd</option>
+
+                    </select>
                 </div>
                 <div>
                     <label>Semestre Activo:</label>

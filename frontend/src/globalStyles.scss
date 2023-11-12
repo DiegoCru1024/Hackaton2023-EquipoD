@@ -71,3 +71,42 @@ input {
     font-weight: 400;
   }
 }
+
+select {
+  height: 25px;
+  display: block;
+  width: 100%;
+  border: solid;
+  font-size: 0.875rem;
+
+  /*Color de Background*/
+  background-color: rgb(255 255 255);
+
+  /*Transicion*/
+  transition-duration: 300ms;
+  transition-property: color, background-color, border-color,
+  text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+  backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /*Border*/
+  border-width: 1px;
+  border-color: white;
+  border-color: rgb(226 232 240);
+  border-radius: 0.25rem;
+
+  /*Focus*/
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(22, 160, 133, 0.2);
+    --tw-ring-opacity: 1;
+    border-color: rgb(71 85 105 / var(--tw-ring-opacity));
+  }
+
+  /*PlacerHolder*/
+  &::placeholder {
+    --tw-text-opacity: 1;
+    color: rgb(148 163 184 / var(--tw-text-opacity));
+    font-weight: 400;
+  }
+}
