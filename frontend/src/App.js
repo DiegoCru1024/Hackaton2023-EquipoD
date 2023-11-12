@@ -5,7 +5,9 @@ import CreateSemesterComponent from "./components/semesterComponent/subComponent
 import Sidebar from "./components/sidebarComponent/sidebarComponent";
 import LoginComponent from "./components/loginComponent/loginComponent";
 import HomeComponent from "./components/homeComponent/homeComponent";
-import "./globalStyles.scss";
+import SemesterComponent from "./components/semesterComponent/semesterComponent";
+import './globalStyles.scss';
+import GroupComponent from "./components/groupComponent/groupComponent";
 
 const SidebarLayout = ({ children }) => (
   <div className={"appContainer"}>
@@ -47,7 +49,7 @@ function App() {
           path={"/group"}
           element={
             <SidebarLayout>
-              <SemesterComponent />
+              <GroupComponent />
             </SidebarLayout>
           }
         />
