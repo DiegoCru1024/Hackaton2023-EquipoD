@@ -7,5 +7,7 @@ public interface IUnitOfWork : IDisposable
     IGroupRepository Groups { get; set; }
     IGroupScheduleRepository GroupSchedules { get; set; }
     ISemesterRepository Semesters { get; set; }
+    ICourseRepository Courses { get; set; }
+    IStudyPlanRepository StudyPlans { get; set; }
     Task CommitAsync();
 }

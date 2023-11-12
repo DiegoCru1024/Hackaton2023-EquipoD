@@ -11,7 +11,10 @@ public static class ApplicationServicesExtensions
     {
 
         #region Services
+        services.AddScoped<IGroupService, GroupService>();
         services.AddScoped<ISemesterService, SemesterService>();
+        services.AddScoped<IStudyPlanService, StudyPlanService>();
+        services.AddScoped<ICourseService, CourseService>();
         #endregion
 
         return services;

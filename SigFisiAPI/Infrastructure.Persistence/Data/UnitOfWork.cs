@@ -11,6 +11,8 @@ public class UnitOfWork : IUnitOfWork
     public IGroupRepository Groups { get; set; }
     public IGroupScheduleRepository GroupSchedules { get; set; }
     public ISemesterRepository Semesters { get; set; }
+    public ICourseRepository Courses { get; set; }
+    public IStudyPlanRepository StudyPlans { get; set; }
 
     public UnitOfWork(ApplicationContext context)
     {
@@ -20,6 +22,8 @@ public class UnitOfWork : IUnitOfWork
         Groups = new GroupRepository(context);
         GroupSchedules = new GroupScheduleRepository(context);
         Semesters = new SemesterRepository(context);
+        Courses = new CourseRepository(context);
+        StudyPlans = new StudyPlanRepository(context);
     }
 
     public async Task CommitAsync()
