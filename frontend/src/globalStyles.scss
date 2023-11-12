@@ -151,9 +151,14 @@ table {
   margin-top: 20px;
 
   th, td {
+    width: 20%;
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+  }
+
+  th, td:last-child {
+    text-align: center;
   }
 
   th {
@@ -167,5 +172,9 @@ table {
 
   tr:hover {
     background-color: #ddd;
+  }
+
+  button {
+    margin-left: 10px;
   }
 }
