@@ -6,3 +6,8 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.appContainer {
+  display: flex;
+  overflow: hidden;
+}

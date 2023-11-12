@@ -27,18 +27,18 @@ export default function SideBar() {
                 </div>
 
                 <ul className={styles.navBar}>
-                    <li><Link to={'/'}>
+                    <li><Link to={'/home'}>
                         <AiFillHome className={styles.navBarIcon}/> Inicio</Link>
                     </li>
 
-                    <li><Link to={'/requestList'}>
+                    <li><Link to={'/semester'}>
                         <HiClipboardList className={styles.navBarIcon}/> Semestre</Link>
                     </li>
 
-                    <li><Link to={'/repairRequest'}>
+                    <li><Link to={'/group'}>
                         <HiInformationCircle className={styles.navBarIcon}/> Grupos</Link>
                     </li>
-                    <li><Link to={'/repairRequest'}>
+                    <li><Link to={'/classroom'}>
                         <HiInformationCircle className={styles.navBarIcon}/> Aulas</Link>
                     </li>
                 </ul>
