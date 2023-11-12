@@ -1,10 +1,8 @@
 import styles from './sidebarStyles.module.scss'
-import {HiClipboardList, HiInformationCircle} from "react-icons/hi";
-import {HiUserCircle} from "react-icons/hi2";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {clearUser} from "../../redux/userSlice";
-import {AiFillHome} from "react-icons/ai";
+import {BiSolidBook, BiSolidGroup, BiSolidHome, BiSolidSchool, BiSolidUserCircle} from "react-icons/bi";
 
 export default function SideBar() {
     const userData = useSelector((state) => state.userData)
@@ -19,7 +17,7 @@ export default function SideBar() {
         <div className={styles.sideBarContainer}>
             <div>
                 <div className={styles.userContainer}>
-                    <HiUserCircle style={{fontSize: '50px'}}/>
+                    <BiSolidUserCircle style={{fontSize: '50px'}}/>
                     <div className={styles.userInfo}>
                         <h3>{userData.name}</h3>
                         <p>Rol: {userData.role}</p>
@@ -28,18 +26,18 @@ export default function SideBar() {
 
                 <ul className={styles.navBar}>
                     <li><Link to={'/home'}>
-                        <AiFillHome className={styles.navBarIcon}/> Inicio</Link>
+                        <BiSolidHome className={styles.navBarIcon}/> Inicio</Link>
                     </li>
 
                     <li><Link to={'/semester'}>
-                        <HiClipboardList className={styles.navBarIcon}/> Semestre</Link>
+                        <BiSolidBook className={styles.navBarIcon}/> Semestre</Link>
                     </li>
 
                     <li><Link to={'/group'}>
-                        <HiInformationCircle className={styles.navBarIcon}/> Grupos</Link>
+                        <BiSolidGroup className={styles.navBarIcon}/> Grupos</Link>
                     </li>
                     <li><Link to={'/classroom'}>
-                        <HiInformationCircle className={styles.navBarIcon}/> Aulas</Link>
+                        <BiSolidSchool className={styles.navBarIcon}/> Aulas</Link>
                     </li>
                 </ul>
             </div>
