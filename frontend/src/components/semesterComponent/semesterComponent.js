@@ -23,7 +23,7 @@ const SemesterComponent = () => {
   };
 
   return (
-    <div>
+    <div className={'componentContainer'}>
       <h1>Crear Semestre</h1>
       <button onClick={navigateToCreateSemester}>
         Ir a Crear Semestre
