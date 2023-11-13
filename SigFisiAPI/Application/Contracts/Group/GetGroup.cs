@@ -7,4 +7,5 @@ public class GetGroup
     public int Semester { get; set; }
     public int GroupNumber { get; set; }
     public int Limit { get; set; }
+
 }

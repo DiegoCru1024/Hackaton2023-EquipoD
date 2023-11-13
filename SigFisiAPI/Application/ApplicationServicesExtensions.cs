@@ -15,6 +15,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<IStudyPlanService, StudyPlanService>();
         services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<ICourseDictationTypeService, CourseDictationTypeService>();
+        services.AddScoped<IGroupScheduleService, GroupScheduleService>();
         #endregion
 
         return services;

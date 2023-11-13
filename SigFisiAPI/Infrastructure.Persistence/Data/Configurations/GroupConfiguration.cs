@@ -28,6 +28,9 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
         builder.Property(x => x.CourseId)
             .HasColumnName("cur_iCodigo");
 
+        builder.Property(x => x.Limit)
+            .HasColumnName("cur_iTope");
+
         //Relationships
         builder.HasOne(x => x.Semester)
             .WithMany(y => y.Groups)

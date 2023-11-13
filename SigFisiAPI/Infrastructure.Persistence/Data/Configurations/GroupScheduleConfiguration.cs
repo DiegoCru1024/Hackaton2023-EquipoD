@@ -33,9 +33,6 @@ public class GroupScheduleConfiguration : IEntityTypeConfiguration<GroupSchedule
                 x => TimeSpan.FromSeconds(x.TotalSeconds)
             ).HasColumnType("TIME");
 
-        builder.Property(x => x.Limit)
-            .HasColumnName("gruhor_iTope");
-
         builder.Property(x => x.GroupId)
             .HasColumnName("gru_iCodigo");
 

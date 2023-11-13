@@ -1,4 +1,5 @@
 using Application.Contracts.Group;
+using Application.Contracts.GroupSchedule;
 using Application.Exceptions;
 using Application.Repositories;
 
