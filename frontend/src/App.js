@@ -10,8 +10,9 @@ import HomeComponent from "./components/homeComponent/homeComponent";
 import './globalStyles.scss';
 import GroupComponent from "./components/groupComponent/groupComponent";
 import CreateGroupComponent from "./components/groupComponent/subcomponents/createGroupComponent";
-import DetailGroupComponent from "./components/groupComponent/subcomponents/deteailGroupComponent";
+import DetailGroupComponent from "./components/groupComponent/subcomponents/detailGroupComponent";
 import UpdateGroupComponent from "./components/groupComponent/subcomponents/updateGroupComponent";
+import ClassroomComponent from "./components/classroomComponent/classroomComponent";
 
 
 const SidebarLayout = ({children}) => (
@@ -54,7 +55,7 @@ function App() {
                     path={"/semester/details/:id"}
                     element={
                         <SidebarLayout>
-                            <DetailSemesterComponent />
+                            <DetailSemesterComponent/>
                         </SidebarLayout>
                     }
                 />
@@ -102,7 +103,7 @@ function App() {
                     path={"/classroom"}
                     element={
                         <SidebarLayout>
-                            <SemesterComponent/>
+                            <ClassroomComponent/>
                         </SidebarLayout>
                     }
                 />

@@ -195,7 +195,7 @@ export default function CreateGroupComponent() {
             messageMediator.showMessage('Se registro el grupo correctamente...', 'success')
             navigate('/group')
         } catch (error) {
-            console.log(error)
+            messageMediator.showMessage(error.response.data.Message, 'error')
         }
     }
 

@@ -41,7 +41,6 @@ export default function GroupComponent() {
             <table>
                 <thead>
                     <tr>
-                        <th>Id Grupo</th>
                         <th>Nombre Curso</th>
                         <th>Semestre</th>
                         <th>Grupo</th>
@@ -52,7 +51,6 @@ export default function GroupComponent() {
                 <tbody>
                     {groups.map((group) => (
                         <tr key={group.id}>
-                            <td>{group.id}</td>
                             <td>{group.courseName}</td>
                             <td>{group.semester}</td>
                             <td>{group.groupNumber}</td>
