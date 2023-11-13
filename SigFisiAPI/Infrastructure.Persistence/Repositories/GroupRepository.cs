@@ -14,6 +14,10 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
     public override async Task<Group?> GetByIdAsync(int id)
     {
         return await DbSet
+            .Include(x => x.GroupSchedules)
+            .ThenInclude(y => y.CourseDictationType)
+            .Include(x => x.GroupSchedules)
+            .ThenInclude(y => y.Day)
             .Include(x => x.Course)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
@@ -21,6 +25,7 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
     public override async Task<IEnumerable<Group>> GetAllAsync()
     {
         return await DbSet
+            .Include(x => x.GroupSchedules)
             .Include(x => x.Course)
             .ToListAsync();
     }

@@ -36,4 +36,11 @@ public class GroupController : ControllerBase
         return CreatedAtAction(nameof(GetGroupById), new { id = group.Id }, group);
     }
 
+    [HttpGet("NextGroupNumber/{courseId}")]
+    public async Task<IActionResult> GetNextGroupNumberByCourseId(int courseId)
+    {
+        var nextGroupNumber = await _groupService.GetNextGroupNumberByCourseId(courseId);
+        return Ok(nextGroupNumber);
+    }
+
 }

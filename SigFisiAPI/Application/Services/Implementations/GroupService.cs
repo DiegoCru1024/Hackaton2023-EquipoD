@@ -42,7 +42,7 @@ public class GroupService : IGroupService
         return _mapper.Map<Group, GetGroupWithSchedules>(createdGroup);
     }
 
-    public async Task<GetGroup?> GetGroupByIdAsync(int id)
+    public async Task<GetGroupWithSchedules?> GetGroupByIdAsync(int id)
     {
         var group = await _unitOfWork.Groups.GetByIdAsync(id);
 
@@ -51,7 +51,7 @@ public class GroupService : IGroupService
             throw new AppException("No se encontro la el grupo");
         }
 
-        return _mapper.Map<GetGroup>(group);
+        return _mapper.Map<GetGroupWithSchedules>(group);
     }
 
     public async Task<IEnumerable<GetGroup>?> GetAllGroupsAsync()
@@ -59,5 +59,11 @@ public class GroupService : IGroupService
         var groups = await _unitOfWork.Groups.GetAllAsync();
 
         return _mapper.Map<List<GetGroup>>(groups);
+    }
+
+    public async Task<int> GetNextGroupNumberByCourseId(int courseId)
+    {
+        var lastGroupNumber = await _unitOfWork.Groups.GetNextNumberByCourseId(courseId);
+        return lastGroupNumber;
     }
 }
