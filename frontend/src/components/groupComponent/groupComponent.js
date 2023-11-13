@@ -10,67 +10,21 @@ export default function GroupComponent() {
         semesterName: '2023-II'
     })
 
-    const [groupArray, setGroupArray] = useState([
-        {
-            groupID: 1,
-            semesterID: 5,
-            courseID: 3,
-            groupCapacity: 45
-        }, {
-            groupID: 2,
-            semesterID: 2,
-            courseID: 7,
-            groupCapacity: 15
-        }, {
-            groupID: 3,
-            semesterID: 9,
-            courseID: 12,
-            groupCapacity: 65
-        }
-    ])
-
-    const handleDelete = async (groupID) => {
-        const url = `/delete/${groupID}`
-
-        try {
-            const response = await axios.delete(url)
-            console.log(response)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const getGroupData = async (e) => {
-        const url = '/getGroupData'
-
-        try {
-            const response = await axios.get(url)
-            setGroupArray(response.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const getSemesterInfo = async (e) => {
-        const url = '/getActiveSemesterInfo'
-
-        try {
-            const response = await axios.get(url)
-            setSemesterInfo(response.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    const [groups, setGroups] = useState([]);
 
     useEffect(() => {
-        getSemesterInfo().then(() => {
-            console.log('Datos semestre...')
-        })
-
-        getGroupData().then(() => {
-            console.log('Datos grupos...')
-        })
-    }, [])
+        getGroupData();
+    }, []);
+    
+    const getGroupData = async () => {
+        try {
+            const response = await axios.get('https://sig-fisi.application.ryonadev.me/api/Group/GetAll');
+            setGroups(response.data);
+            console.log(groups)
+        } catch (error) {
+            console.error('Error fetching groups data:', error);
+        }
+    };
 
     return (
         <div className={'componentContainer'}>
@@ -87,32 +41,34 @@ export default function GroupComponent() {
             <table>
                 <thead>
                     <tr>
-                        <th>Curso</th>
+                        <th>Id Grupo</th>
+                        <th>Nombre Curso</th>
                         <th>Semestre</th>
                         <th>Grupo</th>
-                        <th>Tope</th>
+                        <th>Límite</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {groupArray.map((group) => (
-                        <tr>
-                            <td>{group.groupID}</td>
-                            <td>{group.semesterID}</td>
-                            <td>{group.courseID}</td>
-                            <td>{group.groupCapacity}</td>
+                    {groups.map((group) => (
+                        <tr key={group.id}>
+                            <td>{group.id}</td>
+                            <td>{group.courseName}</td>
+                            <td>{group.semester}</td>
+                            <td>{group.groupNumber}</td>
+                            <td>{group.limit}</td>
                             <td>
-                                <Link to={`/group/details/${group.groupID}`}>
+                                <Link to={`/group/details/${group.id}`}>
                                     <button className={'buttonDetail'}>
                                         <AiOutlineEye />
                                     </button>
                                 </Link>
-                                <Link to={`/group/update/${group.groupID}`}>
+                                <Link to={`/group/update/${group.id}`}>
                                     <button className={'buttonUpdate'}>
                                         <AiOutlineEdit />
                                     </button>
                                 </Link>
-                                <button className={'buttonDelete'} onClick={() => handleDelete(group.groupID)}>
+                                <button className={'buttonDelete'}>
                                     <AiOutlineDelete />
                                 </button>
                             </td>
