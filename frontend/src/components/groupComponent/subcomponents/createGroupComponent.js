@@ -4,6 +4,23 @@ import {useEffect, useState} from "react";
 import MessageMediator from "../../../mediators/messageMediator";
 
 export default function CreateGroupComponent() {
+    const [selectedHour, setSelectedHour] = useState(18);
+
+    const handleInputChange = (e) => {
+        const inputValue = e.target.value;
+
+        // Verifica si el valor ingresado es un número y está en el rango permitido
+        if (!isNaN(inputValue) && inputValue >= 0 && inputValue <= 23) {
+            // Actualiza el estado con el valor interno
+            setSelectedHour(parseInt(inputValue, 10));
+        }
+    };
+
+    // Función para formatear la hora en el formato deseado (HH:00)
+    const formatHour = () => {
+        return selectedHour < 10 ? `0${selectedHour}:00` : `${selectedHour}:00`;
+    };
+
     const messageMediator = new MessageMediator()
     const [planArray, setPlanArray] = useState([])
     const [coursesArray, setCoursesArray] = useState([])
@@ -51,7 +68,7 @@ export default function CreateGroupComponent() {
     }
 
     const getSchedule = async () => {
-        const url = `https://sig-fisi.application.ryonadev.me/api/CourseDictationType/Search?Semester=${groupData.semesterID}&CourseId=${groupData.courseID}&StudyPlanId=${groupData.planID}`
+        const url = `https://sig-fisi.application.ryonadev.me/api/CourseHoursDictated?courseId=${groupData.courseID}`
         const hasInvalidValue = Object.values(groupData).some((value) => value === 'invalid');
 
         if (hasInvalidValue) {
@@ -155,11 +172,11 @@ export default function CreateGroupComponent() {
                         <div key={schedule.id} className={styles.scheduleMap}>
                             <div>
                                 <label>Tipo de Dictado:</label>
-                                <input type={'text'} readOnly={true} value={schedule.name}/>
+                                <input type={'text'} readOnly={true} value={schedule.dictationTypeName}/>
                             </div>
                             <div>
                                 <label>Horas de Dictado:</label>
-                                <input type={'text'} readOnly={true} value={schedule.name}/>
+                                <input type={'text'} readOnly={true} value={schedule.hours}/>
                             </div>
                             <div>
                                 <label> Ingrese el día: </label>
@@ -174,7 +191,16 @@ export default function CreateGroupComponent() {
                                 </select>
                             </div>
                             <div>
-                                <label> Ingrese la hora: </label>
+                                <label> Ingrese la hora de inicio: </label>
+                                <input
+                                    type="text"
+                                    id="hourInput"
+                                    value={formatHour()}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div>
+                                <label> Ingrese la hora de fin: </label>
                                 <select name={`${schedule.id}-hour`} onChange={handleScheduleChange}>
                                     <option value={'invalid'}>-- Seleccione una hora --</option>
                                     <option value={1}>1</option>
@@ -186,7 +212,7 @@ export default function CreateGroupComponent() {
                     ))}
 
                     <div>
-                        
+
                     </div>
 
                     <button onClick={createGroup}>Enviar</button>
