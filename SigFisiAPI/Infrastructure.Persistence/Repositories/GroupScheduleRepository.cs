@@ -16,6 +16,7 @@ public class GroupScheduleRepository : GenericRepository<GroupSchedule>, IGroupS
         return await DbSet.Include(x => x.Group)
             .ThenInclude(x => x.Course)
             .Include(x => x.Day)
+            .Include(x => x.Classroom)
             .Where(x => x.Group.Number == groupNumber && x.Group.Course.Semester == semester)
             .ToListAsync();
     }

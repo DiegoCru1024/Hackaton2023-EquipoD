@@ -118,31 +118,9 @@ public class SemesterService : ISemesterService
 
         await _unitOfWork.CommitAsync();
     }
-
-    public async Task DeactivateSemesterAsync(int id)
-    {
-        var semester = await _unitOfWork.Semesters.GetByIdAsync(id);
-
-        if (semester == null)
-        {
-            throw new AppException("No se encontro el semestre");
-        }
-
-        semester.IsActive = false;
-
-        await _unitOfWork.CommitAsync();
-    }
-
     public async Task ActivateSemesterAsync(int id)
     {
-        var semester = await _unitOfWork.Semesters.GetByIdAsync(id);
-
-        if (semester == null)
-        {
-            throw new AppException("No se encontro el semestre");
-        }
-
-        semester.IsActive = true;
+        await _unitOfWork.Semesters.SetActiveSemester(id);
 
         await _unitOfWork.CommitAsync();
     }

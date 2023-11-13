@@ -20,7 +20,8 @@ public class CourseHoursDictatedService : ICourseHoursDictatedService
             DictationTypeName = x.CourseDictationType.Name,
             Hours = x.Hours,
             CourseName = x.Course.Name,
-            Id = x.Id
+            Id = x.Id,
+            DictationTypeId = x.CourseDictationTypeId
         });
     }
 }

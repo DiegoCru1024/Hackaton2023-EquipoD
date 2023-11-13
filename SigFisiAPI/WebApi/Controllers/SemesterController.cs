@@ -50,17 +50,11 @@ public class SemesterController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut("{id}/Deactivate")]
-    public async Task<IActionResult> DeactivateSemester(int id)
-    {
-        await _semesterService.DeactivateSemesterAsync(id);
-        return Ok();
-    }
-
     [HttpPut("{id}/Activate")]
     public async Task<IActionResult> ActivateSemester(int id)
     {
         await _semesterService.ActivateSemesterAsync(id);
         return Ok();
     }
+
 }

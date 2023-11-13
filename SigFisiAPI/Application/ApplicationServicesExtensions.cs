@@ -1,3 +1,4 @@
+using System.Reflection;
 using Application.Services;
 using Application.Services.Implementations;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,7 @@ public static class ApplicationServicesExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         #region Services
         services.AddScoped<IGroupService, GroupService>();

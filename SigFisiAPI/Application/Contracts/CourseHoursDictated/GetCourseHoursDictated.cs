@@ -4,6 +4,7 @@ public class GetCourseHoursDictated
 {
     public int Id { get; set; }
     public string DictationTypeName { get; set; }
+    public int DictationTypeId { get; set; }
     public string CourseName { get; set; }
     public int Hours { get; set; }
 }

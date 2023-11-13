@@ -21,10 +21,12 @@ public class GroupScheduleService : IGroupScheduleService
         return unavailableSchedules.Select(x => new GetGroupSchedule()
         {
             CourseName = x.Group.Course.Name,
-            DayNumber = x.Day.Number,
+            DayId = x.DayId,
+            DayName = x.Day.Name,
             EndTime = x.EndTime,
             StarTime = x.StartTime,
-            GroupNumber = x.Group.Number
+            GroupNumber = x.Group.Number,
+            ClassroomCode = x.Classroom.Code
         });
     }
 }
