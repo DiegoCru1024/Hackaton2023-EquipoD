@@ -29,8 +29,14 @@ export default function GroupComponent() {
     ])
 
     const handleDelete = async (groupID) => {
-        const url = '/delete'
-        const response = await axios.delete(url)
+        const url = `/delete/${groupID}`
+
+        try {
+            const response = await axios.delete(url)
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const getGroupData = async (e) => {
@@ -71,7 +77,7 @@ export default function GroupComponent() {
             <div className={styles.semesterInfoContainer}>
                 <div>
                     <label>Semestre Activo</label>
-                    <input type={'text'} readOnly={true}/>
+                    <input type={'text'} readOnly={true} value={semesterInfo.semesterName}/>
                 </div>
                 <Link to={'/group/create'}>
                     <button>Crear Grupo</button>
@@ -80,10 +86,10 @@ export default function GroupComponent() {
             <table>
                 <thead>
                 <tr>
-                    <th>Grupo</th>
-                    <th>Semestre</th>
                     <th>Curso</th>
-                    <th>Capacidad</th>
+                    <th>Semestre</th>
+                    <th>Grupo</th>
+                    <th>Tope</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
@@ -101,7 +107,7 @@ export default function GroupComponent() {
                             <Link to={`/group/update/${group.groupID}`}>
                                 <button>Editar</button>
                             </Link>
-                            <button>Eliminar</button>
+                            <button onClick={() => handleDelete(group.groupID)}>Eliminar</button>
                         </td>
                     </tr>
                 ))}
