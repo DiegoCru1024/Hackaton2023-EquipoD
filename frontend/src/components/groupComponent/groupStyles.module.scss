@@ -1,0 +1,22 @@
+.semesterInfoContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  column-gap: 50px;
+  border-bottom: 1px solid black;
+  padding-bottom: 50px;
+  margin-bottom: 50px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  a {
+    grid-area: 1 / 6 / 2 / 7;
+    display: flex;
+
+    button {
+      width: 100%;
+    }
+  }
+}
