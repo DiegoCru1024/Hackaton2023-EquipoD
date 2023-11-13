@@ -20,22 +20,44 @@ public class GroupService : IGroupService
 
     public async Task<GetGroupWithSchedules> CreateGroupAsync(CreateGroup createGroup)
     {
+
         var course = await _unitOfWork.Courses.GetByIdAsync(createGroup.CourseId);
         if (course == null)
         {
             throw new AppException("El id de curso no existe");
         }
-        var nextGroupNumber = await _unitOfWork.Groups.GetNextNumberByCourseId(course.Id);
+
+        var expectedSchedulesQuantity = (await _unitOfWork.CourseHoursDictated.SearchCourseHoursDictated(course.Id)).Count();
+        if (createGroup.GroupSchedules.Count != expectedSchedulesQuantity)
+        {
+            throw new AppException("Se debe ingresar todos los horarios del curso");
+        }
         var semester = await _unitOfWork.Semesters.GetActiveSemester();
         if (semester == null)
         {
             throw new AppException("No hay un semestre activo");
         }
         var group = _mapper.Map<Group>(createGroup);
-        group.Number = nextGroupNumber;
         group.SemesterId = semester.Id;
 
         var groupSchedules = _mapper.Map<List<GroupSchedule>>(createGroup.GroupSchedules);
+        var groupNumberIsValid = await ValidateGroupNumber(group);
+        if (!groupNumberIsValid)
+        {
+            throw new AppException("El numero de grupo ya existe");
+        }
+
+        var groupNumber = createGroup.GroupNumber;
+        var courseSemester = course.Semester;
+
+        foreach (var schedule in groupSchedules)
+        {
+            var scheduleIsValid = await ValidateGroupSchedule(schedule, groupNumber, courseSemester);
+            if (!scheduleIsValid)
+            {
+                throw new AppException("El horario no es valido");
+            }
+        }
         group.GroupSchedules = groupSchedules;
         var createdGroup = await _unitOfWork.Groups.AddAsync(group);
         await _unitOfWork.CommitAsync();
@@ -65,5 +87,22 @@ public class GroupService : IGroupService
     {
         var lastGroupNumber = await _unitOfWork.Groups.GetNextNumberByCourseId(courseId);
         return lastGroupNumber;
+    }
+
+    private async Task<bool> ValidateGroupNumber(Group group)
+    {
+        var groupExists = await _unitOfWork.Groups.GetByNumberAndCourseId(group.Number, group.CourseId);
+        return groupExists == null;
+    }
+
+    private async Task<bool> ValidateGroupSchedule(GroupSchedule newGroupSchedule,int groupNumber, int semester)
+    {
+        var unavailableSchedulesInDay = await _unitOfWork.GroupSchedules.GetUnavailableSchedulesByDayAsync(groupNumber, semester, newGroupSchedule.DayId);
+        foreach (var schedule in unavailableSchedulesInDay)
+        {
+            if(!(newGroupSchedule.EndTime <= schedule.StartTime || newGroupSchedule.StartTime >= schedule.EndTime))
+                return false;
+        }
+        return true;
     }
 }

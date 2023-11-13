@@ -37,4 +37,12 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
 
         return lastGroup?.Number + 1 ?? 1;
     }
+
+    public async Task<Group?> GetByNumberAndCourseId(int groupNumber, int groupCourseId)
+    {
+        return await DbSet
+            .Include(x => x.GroupSchedules)
+            .Include(x => x.Course)
+            .FirstOrDefaultAsync(x => x.Number == groupNumber && x.CourseId == groupCourseId);
+    }
 }

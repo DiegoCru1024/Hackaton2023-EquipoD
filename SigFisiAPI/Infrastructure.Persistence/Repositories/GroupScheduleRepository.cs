@@ -20,4 +20,9 @@ public class GroupScheduleRepository : GenericRepository<GroupSchedule>, IGroupS
             .Where(x => x.Group.Number == groupNumber && x.Group.Course.Semester == semester)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<GroupSchedule>> GetUnavailableSchedulesByDayAsync(int groupNumber, int semester, int dayId)
+    {
+        return (await GetUnavailableSchedulesAsync(groupNumber, semester)).Where(x => x.DayId == dayId);
+    }
 }
