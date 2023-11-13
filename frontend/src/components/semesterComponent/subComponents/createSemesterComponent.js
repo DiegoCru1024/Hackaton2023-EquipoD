@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styles from './createSemesterStyles.module.scss';
+import MessageMediator from '../../../mediators/messageMediator';
+import { useNavigate } from 'react-router-dom'; 
 
 const CreateSemesterComponent = () => {
+  const navigate = useNavigate();
+  const messageMediator = new MessageMediator()
   const [semesterName, setSemesterName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -19,6 +23,7 @@ const CreateSemesterComponent = () => {
   };
 
   const handleSubmit = async (e) => {
+    let created = false;
     e.preventDefault();
     const newSemester = {
       code: semesterName,
@@ -32,10 +37,16 @@ const CreateSemesterComponent = () => {
       setSemesterName('');
       setStartDate('');
       setEndDate('');
+      created = true
     } catch (error) {
       console.error('Error creating semester:', error);
     }
-  };
+
+    if (created) {
+      messageMediator.messageSuccessCreated();
+      navigate(-1);
+    };
+  }
 
   return (
     <div className='componentContainer'>

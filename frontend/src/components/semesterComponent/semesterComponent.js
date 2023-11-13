@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
+import ReactDOMServer from 'react-dom/server';
+
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { AiOutlineEye, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
-import Swal from "sweetalert2";
+import MessageMediator from "../../mediators/messageMediator";
+import MyForm from "./subComponents/formToActiveSemester";
+import Swal from 'sweetalert2';
 
 const SemesterComponent = () => {
+    const messageMediator = new MessageMediator();
     const [semesters, setSemesters] = useState([]);
 
     useEffect(() => {
@@ -29,22 +34,31 @@ const SemesterComponent = () => {
         }
     };
 
-    const handleMessageConfirmation = (id) => {
+    const openModal = () => {
         Swal.fire({
-            title: "¿Desea borrar el registro?",
-            text: "Esta acción es irreversible!",
-            icon: "warning",
+            title: 'Activar Semestre',
+            html: ReactDOMServer.renderToString(<MyForm semesterOptions={semesters} />),
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            cancelButtonText: "Cancelar",
-            confirmButtonText: "Confirmar"
-        }).then((result) => {
-            if(result.isConfirmed){
-                handleDeleteSemester(id)
-            }
+            confirmButtonText: 'Activar',
+            cancelButtonText: 'Cancelar',
+            showLoaderOnConfirm: true,
+            preConfirm: (result) => {
+                const selectedSemesterCode = result.value;
+                const selectedSemester = semesters.find((semester) => semester.code === selectedSemesterCode);
+
+                return axios.put(`https://sig-fisi.application.ryonadev.me/api/Semester/${selectedSemester.id}/Activate`, {
+                    // Puedes enviar más datos según tus necesidades
+                })
+                    .then(() => {
+                        fetchData(); // Actualizar la lista de semestres después de la operación
+                        return true; // Indicar a SweetAlert2 que cierre el modal
+                    })
+                    .catch((error) => {
+                        console.error('Error al activar el semestre:', error);
+                    });
+            },
         });
-    }
+    };
 
     return (
         <div className={'componentContainer'}>
@@ -54,12 +68,16 @@ const SemesterComponent = () => {
                     Crear Semestre
                 </button>
             </Link>
+            <button onClick={() => openModal()}>
+                Desginar Semestre Activo
+            </button>
             <table>
                 <thead>
                     <tr>
                         <th>Semestre</th>
                         <th>Fecha Inicio</th>
                         <th>Fecha Fin</th>
+                        <th>Activo</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -69,6 +87,7 @@ const SemesterComponent = () => {
                             <td>{semester.code}</td>
                             <td>{semester.startDate}</td>
                             <td>{semester.endDate}</td>
+                            <td>{semester.isActive ? "Activo" : "Inactivo"}</td>
                             <td>
                                 <Link to={`/semester/details/${semester.id}`}>
                                     <button title="Ver" className={'buttonDetail'}>
@@ -80,7 +99,7 @@ const SemesterComponent = () => {
                                         <AiOutlineEdit />
                                     </button>
                                 </Link>
-                                <button title="Eliminar" className={'buttonDelete'} onClick={() => handleMessageConfirmation(semester.id)}>
+                                <button title="Eliminar" className={'buttonDelete'} onClick={() => messageMediator.showDeleteConfirmation(() => handleDeleteSemester(semester.id))}>
                                     <AiOutlineDelete />
                                 </button>
                             </td>

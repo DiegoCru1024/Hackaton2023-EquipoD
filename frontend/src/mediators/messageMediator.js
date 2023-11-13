@@ -13,7 +13,25 @@ class MessageMediator {
         });
     }
 
-    showDeleteConfirmation = () => {
+    messageSuccessCreated = () => {
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "El registro se creó correctamente",
+            timer: 3000
+        })
+    }
+
+    messageSuccessUpdated = () => {
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "El registro editó correctamente",
+            timer: 3000
+        })
+    }
+
+    showDeleteConfirmation = (functionDelete) => {
         Swal.fire({
             title: "¿Desea borrar el registro?",
             text: "Esta acción es irreversible!",
@@ -24,12 +42,7 @@ class MessageMediator {
             confirmButtonText: "Confirmar"
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Eliminado",
-                    text: "El registro se eliminó correctamente.",
-                    icon: "success"
-                });
-                return true
+                functionDelete()
             }
             return false
         });
