@@ -51,11 +51,13 @@ public class GroupService : IGroupService
             throw new AppException("No se encontro la el grupo");
         }
 
-        return new GetGroup();
+        return _mapper.Map<GetGroup>(group);
     }
 
     public async Task<IEnumerable<GetGroup>?> GetAllGroupsAsync()
     {
-        throw new NotImplementedException();
+        var groups = await _unitOfWork.Groups.GetAllAsync();
+
+        return _mapper.Map<List<GetGroup>>(groups);
     }
 }
