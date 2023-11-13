@@ -2,35 +2,23 @@ import styles from "./createGroupStyles.module.scss";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import MessageMediator from "../../../mediators/messageMediator";
+import ScheduleComponent from "./scheduleComponent";
 
 export default function CreateGroupComponent() {
-    const [selectedHour, setSelectedHour] = useState(18);
-
-    const handleInputChange = (e) => {
-        const inputValue = e.target.value;
-
-        // Verifica si el valor ingresado es un número y está en el rango permitido
-        if (!isNaN(inputValue) && inputValue >= 0 && inputValue <= 23) {
-            // Actualiza el estado con el valor interno
-            setSelectedHour(parseInt(inputValue, 10));
-        }
-    };
-
-    // Función para formatear la hora en el formato deseado (HH:00)
-    const formatHour = () => {
-        return selectedHour < 10 ? `0${selectedHour}:00` : `${selectedHour}:00`;
-    };
-
     const messageMediator = new MessageMediator()
     const [planArray, setPlanArray] = useState([])
     const [coursesArray, setCoursesArray] = useState([])
     const [schedulesArray, setSchedulesArray] = useState([])
     const [groupSchedule, setGroupSchedule] = useState([])
+    const [unavailableHours, setUnavailableHours] = useState([])
+    const [selectedHours, setSelectedHours] = useState([])
+    const [blockedHours, setBlockedHours] = useState([])
     const [groupData, setGroupData] = useState({
         planID: 'invalid',
         semesterID: 'invalid',
         courseID: 'invalid',
-        groupCapacity: 'invalid',
+        limit: 'invalid',
+        groupNumber: '0',
         groupSchedule: []
     })
 
@@ -41,22 +29,38 @@ export default function CreateGroupComponent() {
             [name]: value
         }))
 
-        console.log(groupData)
+        if (name === 'courseID' && value !== 'invalid') {
+            getGroupNumber(value).then(() => {
+                console.log('Grupo recibido...')
+            })
+
+            clearScreen()
+        }
     }
 
-    const handleScheduleChange = async (e) => {
+    const handleScheduleChange = async (e, duration) => {
         const {name, value} = e.target;
         const [scheduleIndex, infoType] = name.split('-');
 
-        setGroupSchedule((prevState) => ({
-            ...prevState,
-            [scheduleIndex]: {
-                ...prevState[scheduleIndex],
-                [infoType]: value,
-            },
-        }));
+        if (infoType === 'dayNumber') {
+            setGroupSchedule((prevState) => ({
+                ...prevState,
+                [scheduleIndex]: {
+                    ...prevState[scheduleIndex],
+                    [infoType]: value,
+                },
+            }));
+        } else {
+            setGroupSchedule((prevState) => ({
+                ...prevState,
+                [scheduleIndex]: {
+                    ...prevState[scheduleIndex],
+                    [infoType]: value,
+                    endTime: (parseInt(value) + duration)
+                },
+            }));
+        }
     };
-
 
     const getPlans = async () => {
         try {
@@ -69,7 +73,8 @@ export default function CreateGroupComponent() {
 
     const getSchedule = async () => {
         const url = `https://sig-fisi.application.ryonadev.me/api/CourseHoursDictated?courseId=${groupData.courseID}`
-        const hasInvalidValue = Object.values(groupData).some((value) => value === 'invalid');
+        const url2 = `https://sig-fisi.application.ryonadev.me/api/GroupSchedule/GetAllUnavailable?groupNumber=${groupData.groupNumber}&semester=${groupData.semesterID}`
+        const hasInvalidValue = Object.values(groupData).some((value) => value === 'invalid' || value === '0');
 
         if (hasInvalidValue) {
             messageMediator.showMessage(`Completa todos los campos antes de continuar...`, 'error');
@@ -79,6 +84,9 @@ export default function CreateGroupComponent() {
         try {
             const response = await axios.get(url)
             setSchedulesArray(response.data)
+
+            const unavailableResponse = await axios.get(url2)
+            setUnavailableHours(unavailableResponse.data)
         } catch (error) {
             console.log(error)
         }
@@ -95,8 +103,98 @@ export default function CreateGroupComponent() {
         }
     }
 
-    const createGroup = () => {
-        console.log(groupData)
+    const getGroupNumber = async (courseGetId) => {
+        const url = `https://sig-fisi.application.ryonadev.me/api/Group/NextGroupNumber/${courseGetId}`
+
+        try {
+            const response = await axios.get(url)
+            setGroupData((prevState) => ({
+                ...prevState,
+                'groupNumber': response.data
+            }))
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const clearScreen = () => {
+        setGroupSchedule([])
+        setSchedulesArray([])
+        setSelectedHours([])
+    }
+
+    const updateSelectedHours = () => {
+        let cellIndexes = [];
+
+        for (const scheduleKey in groupData.groupSchedule) {
+            const schedule = groupData.groupSchedule[scheduleKey];
+
+            if (schedule.startTime !== undefined && schedule.endTime !== undefined && schedule.dayNumber !== undefined) {
+                const startHour = parseInt(schedule.startTime);
+                const dayNumber = parseInt(schedule.dayNumber) - 1;
+
+                for (let i = 0; i < schedule.endTime - startHour; i++) {
+                    cellIndexes.push([startHour + i - 8, dayNumber]);
+                }
+            }
+        }
+
+        setSelectedHours(cellIndexes);
+    };
+
+    const updateBlockedHours = () => {
+        let cellIndexes = [];
+
+        for (const hourKey in unavailableHours) {
+            const hour = unavailableHours[hourKey]
+
+            const startHour = parseInt(hour.startTime);
+            const dayNumber = parseInt(hour.dayId) - 1;
+
+            for (let i = 0; i < hour.endTime - startHour; i++) {
+                cellIndexes.push([startHour + i - 8, dayNumber]);
+            }
+        }
+
+        setBlockedHours(cellIndexes)
+    }
+
+    const convertGroupData = (groupObject) => {
+        const {courseID, limit, groupNumber, groupSchedule} = groupObject;
+
+        const result = {
+            courseId: courseID,
+            limit: limit,
+            groupNumber: groupNumber,
+            groupSchedules: []
+        };
+
+        for (const key in groupSchedule) {
+            const {dayNumber, startTime, endTime} = groupSchedule[key];
+
+            result.groupSchedules.push({
+                dayId: dayNumber,
+                courseDictationTypeId: key,
+                startTime: startTime,
+                endTime: endTime
+            });
+        }
+
+        return result;
+    }
+
+    const createGroup = async () => {
+        const bodyObject = convertGroupData(groupData)
+        const url = 'https://sig-fisi.application.ryonadev.me/api/Group'
+
+        try {
+            const response = await axios.post(url, bodyObject)
+            messageMediator.showMessage('Se registro el grupo correctamente...', 'success')
+            console.log(response.data)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {
@@ -113,11 +211,21 @@ export default function CreateGroupComponent() {
     }, [groupData.planID, groupData.semesterID])
 
     useEffect(() => {
+        updateSelectedHours()
+    }, [groupData.groupSchedule])
+
+    useEffect(() => {
+        updateBlockedHours()
+    }, [unavailableHours])
+
+    useEffect(() => {
         setGroupData((prevState) => ({
             ...prevState,
             groupSchedule: groupSchedule
         }))
     }, [groupSchedule])
+
+    const horaInicio = 8, horaFin = 22
 
     return (
         <div className={'componentContainer'}>
@@ -160,7 +268,11 @@ export default function CreateGroupComponent() {
                 <div>
                     <label>Tope:</label>
                     <input type={'number'} min={0} max={100} placeholder={'Ingrese el tope del grupo...'}
-                           name={'groupCapacity'} onChange={handleChange}/>
+                           name={'limit'} onChange={handleChange}/>
+                </div>
+                <div>
+                    <label>Número de Grupo:</label>
+                    <input readOnly={true} value={groupData.groupNumber}/>
                 </div>
                 <button onClick={getSchedule}>Buscar horarios</button>
             </div>
@@ -169,7 +281,7 @@ export default function CreateGroupComponent() {
                 <div className={styles.groupScheduleContainer}>
                     <h1>Asignar Horario</h1>
                     {schedulesArray.map((schedule) => (
-                        <div key={schedule.id} className={styles.scheduleMap}>
+                        <div key={schedule.dictationTypeId} className={styles.scheduleMap}>
                             <div>
                                 <label>Tipo de Dictado:</label>
                                 <input type={'text'} readOnly={true} value={schedule.dictationTypeName}/>
@@ -180,7 +292,7 @@ export default function CreateGroupComponent() {
                             </div>
                             <div>
                                 <label> Ingrese el día: </label>
-                                <select name={`${schedule.id}-dayID`} onChange={handleScheduleChange}>
+                                <select name={`${schedule.dictationTypeId}-dayNumber`} onChange={handleScheduleChange}>
                                     <option value={'invalid'}>-- Seleccione un día --</option>
                                     <option value={'1'}>Lunes</option>
                                     <option value={'2'}>Martes</option>
@@ -191,31 +303,23 @@ export default function CreateGroupComponent() {
                                 </select>
                             </div>
                             <div>
-                                <label> Ingrese la hora de inicio: </label>
-                                <input
-                                    type="text"
-                                    id="hourInput"
-                                    value={formatHour()}
-                                    onChange={handleInputChange}
-                                />
+                                <label> Hora de inicio: </label>
+                                <input type={'number'} min={horaInicio} max={horaFin - schedule.hours}
+                                       defaultValue={''} name={`${schedule.dictationTypeId}-startTime`}
+                                       onChange={(e) => handleScheduleChange(e, schedule.hours)}
+                                       placeholder={'Ingrese la hora...'}/>
                             </div>
                             <div>
-                                <label> Ingrese la hora de fin: </label>
-                                <select name={`${schedule.id}-hour`} onChange={handleScheduleChange}>
-                                    <option value={'invalid'}>-- Seleccione una hora --</option>
-                                    <option value={1}>1</option>
-                                    <option value={2}>2</option>
-                                    <option value={3}>3</option>
-                                </select>
+                                <label> Hora de fin: </label>
+                                <input value={groupSchedule[schedule.dictationTypeId]?.endTime || ''}
+                                       readOnly={true}/>
                             </div>
                         </div>
                     ))}
 
-                    <div>
+                    <ScheduleComponent blockedHours={blockedHours} selectedHours={selectedHours}/>
 
-                    </div>
-
-                    <button onClick={createGroup}>Enviar</button>
+                    <button type={'button'} onClick={createGroup}>Enviar</button>
                 </div>
             )}
         </div>
