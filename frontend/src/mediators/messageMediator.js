@@ -13,7 +13,7 @@ class MessageMediator {
         });
     }
 
-    showDeleteConfirmation = (executeFunction) => {
+    showDeleteConfirmation = () => {
         Swal.fire({
             title: "¿Desea borrar el registro?",
             text: "Esta acción es irreversible!",
@@ -24,13 +24,14 @@ class MessageMediator {
             confirmButtonText: "Confirmar"
         }).then((result) => {
             if (result.isConfirmed) {
-                executeFunction()
                 Swal.fire({
                     title: "Eliminado",
                     text: "El registro se eliminó correctamente.",
                     icon: "success"
                 });
             }
+
+            return result.isConfirmed
         });
     }
 }
