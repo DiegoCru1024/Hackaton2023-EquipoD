@@ -15,10 +15,10 @@ public class GroupScheduleController : ControllerBase
         _groupScheduleService = groupScheduleService;
     }
 
-    [HttpGet("FindAvailableSchedules")]
-    public async Task<IActionResult> FindAvailableSchedules([FromQuery]FindAvailableSchedules model)
+    [HttpGet("GetAllUnavailable")]
+    public async Task<IActionResult> GetUnavailableSchedules(int groupNumber, int semester)
     {
-        var schedules = await _groupScheduleService.FindAvailableSchedules(model);
+        var schedules = await _groupScheduleService.GetUnavailableSchedules(groupNumber, semester);
         return Ok(schedules);
     }
 }

@@ -4,5 +4,5 @@ namespace Application.Repositories;
 
 public interface IGroupScheduleRepository : IGenericRepository<GroupSchedule>
 {
-    Task<IEnumerable<GroupSchedule>> GetUnavailableScheduleInDayAsync(int groupNumber, int dayId);
+    Task<IEnumerable<GroupSchedule>> GetUnavailableSchedulesAsync(int groupNumber, int semester);
 }

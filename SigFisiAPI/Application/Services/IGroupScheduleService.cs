@@ -4,5 +4,5 @@ namespace Application.Services;
 
 public interface IGroupScheduleService
 {
-    Task<IEnumerable<Schedule>> FindAvailableSchedules(FindAvailableSchedules model);
+    Task<IEnumerable<GetGroupSchedule>> GetUnavailableSchedules(int groupNumber, int semester);
 }

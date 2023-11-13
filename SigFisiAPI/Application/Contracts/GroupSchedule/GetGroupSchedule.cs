@@ -2,7 +2,9 @@ namespace Application.Contracts.GroupSchedule;
 
 public class GetGroupSchedule
 {
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
-    public string Day { get; set; }
+    public string CourseName { get; set; }
+    public int GroupNumber { get; set; }
+    public TimeSpan StarTime { get; set; }
+    public TimeSpan EndTime { get; set; }
+    public int DayNumber { get; set; }
 }
