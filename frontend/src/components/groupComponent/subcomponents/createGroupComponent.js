@@ -5,17 +5,17 @@ import MessageMediator from "../../../mediators/messageMediator";
 
 export default function CreateGroupComponent() {
     const messageMediator = new MessageMediator()
-    const [schedulesArray, setSchedulesArray] = useState([{
-        id: 1
-    }, {
-        id: 2
-    }])
+    const [planArray, setPlanArray] = useState([])
     const [coursesArray, setCoursesArray] = useState([])
+    const [schedulesArray, setSchedulesArray] = useState([])
+    const [groupSchedule, setGroupSchedule] = useState([])
+    const [availableHours, setAvailableHours] = useState([[], []])
     const [groupData, setGroupData] = useState({
         planID: 'invalid',
         semesterID: 'invalid',
         courseID: 'invalid',
-        groupCapacity: 'invalid'
+        groupCapacity: 'invalid',
+        groupSchedule: []
     })
 
     const handleChange = (e) => {
@@ -28,13 +28,34 @@ export default function CreateGroupComponent() {
         console.log(groupData)
     }
 
-    const planes = [{
-        id: 1,
-        nombre: 'Plan 2015'
-    }, {
-        id: 2,
-        nombre: 'Plan 2018'
-    }]
+    const handleScheduleChange = async (e, index) => {
+        const {name, value} = e.target
+        const [scheduleIndex, infoType] = name.split('-')
+
+        if (infoType === 'dayID') {
+            const newHours = getAvailableHours(value, scheduleIndex, groupData.courseID)
+            setAvailableHours((prevState) => ({
+                ...prevState,
+                [availableHours[index]]: newHours
+            }))
+        }
+
+        setGroupSchedule((prevState) => ({
+            ...prevState,
+            [scheduleIndex]: {
+                [infoType]: value
+            }
+        }))
+    }
+
+    const getPlans = async () => {
+        try {
+            const response = await axios.get('https://sig-fisi.application.ryonadev.me/api/StudyPlan/All')
+            setPlanArray(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const getSchedule = async () => {
         const hasInvalidValue = Object.values(groupData).some((value) => value === 'invalid');
@@ -45,17 +66,16 @@ export default function CreateGroupComponent() {
         }
 
         try {
-            const response = await axios.get('/getSchedule')
+            const response = await axios.get(`https://sig-fisi.application.ryonadev.me/api/CourseDictationType/Search?Semester=${groupData.semesterID}&CourseId=${groupData.courseID}&StudyPlanId=${groupData.planID}`)
             setSchedulesArray(response.data)
+            console.log(response.data)
         } catch (error) {
             console.log(error)
         }
-
     };
 
-
     const getCourses = async () => {
-        const url = '/getCourses'
+        const url = `https://sig-fisi.application.ryonadev.me/api/Course/Search?studyPlanId=${groupData.planID}&semester=${groupData.semesterID}`
 
         try {
             const response = await axios.get(url)
@@ -65,8 +85,26 @@ export default function CreateGroupComponent() {
         }
     }
 
-    useEffect(() => {
+    const getAvailableHours = async (dayID, tipoID, courseID) => {
+        console.log(`Horas para ${dayID} ${tipoID} ${courseID}`)
+        const url = ''
+        try {
+            const response = await axios.get(url)
+            return response.data
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    }
 
+    const createGroup = () => {
+        console.log(groupData)
+    }
+
+    useEffect(() => {
+        getPlans().then(() => {
+            console.log('Planes recibidos...')
+        })
     }, []);
 
     useEffect(() => {
@@ -76,6 +114,13 @@ export default function CreateGroupComponent() {
         })
     }, [groupData.planID, groupData.semesterID])
 
+    useEffect(() => {
+        setGroupData((prevState) => ({
+            ...prevState,
+            groupSchedule: groupSchedule
+        }))
+    }, [groupSchedule])
+
     return (
         <div className={'componentContainer'}>
             <h1>Crear Grupo de Curso</h1>
@@ -84,8 +129,8 @@ export default function CreateGroupComponent() {
                     <label>Plan de Estudios:</label>
                     <select name={'planID'} onChange={handleChange}>
                         <option value={'invalid'}>-- Seleccione un plan --</option>
-                        {planes.map((plan) => (
-                            <option key={plan.id} value={plan.id}>{plan.nombre}</option>
+                        {planArray.map((plan) => (
+                            <option key={plan.id} value={plan.id}>{plan.code}</option>
                         ))}
                     </select>
                 </div>
@@ -109,9 +154,8 @@ export default function CreateGroupComponent() {
                     <label>Curso:</label>
                     <select name={'courseID'} onChange={handleChange}>
                         <option value={'invalid'}>-- Seleccione un curso --</option>
-                        <option value={1}>asd</option>
                         {coursesArray.map((course) => (
-                            <option key={course.id} value={course.id}>{course.nombre}</option>
+                            <option key={course.id} value={course.id}>{course.name}</option>
                         ))}
                     </select>
                 </div>
@@ -126,30 +170,36 @@ export default function CreateGroupComponent() {
             {schedulesArray.length !== 0 && (
                 <div className={styles.groupScheduleContainer}>
                     <h1>Asignar Horario</h1>
-                    {schedulesArray.map((schedule) => (
+                    {schedulesArray.map((schedule, index) => (
                         <div key={schedule.id} className={styles.scheduleMap}>
                             <div>
                                 <label>Tipo de Dictado:</label>
-                                <input type={'text'} readOnly={true}/>
+                                <input type={'text'} readOnly={true} value={schedule.name}/>
                             </div>
                             <div>
                                 <label> Ingrese el día: </label>
-                                <select>
-                                    <option>a</option>
-                                    <option>a</option>
-                                    <option>a</option>
+                                <select name={`${schedule.id}-dayID`} onChange={(e) => handleScheduleChange(e, index)}>
+                                    <option value={'invalid'}>-- Seleccione un día --</option>
+                                    <option value={'1'}>Lunes</option>
+                                    <option value={'2'}>Martes</option>
+                                    <option value={'3'}>Miercoles</option>
+                                    <option value={'4'}>Jueves</option>
+                                    <option value={'5'}>Viernes</option>
+                                    <option value={'6'}>Sabado</option>
                                 </select>
                             </div>
                             <div>
                                 <label> Ingrese la hora: </label>
-                                <select>
-                                    <option>a</option>
-                                    <option>a</option>
-                                    <option>a</option>
+                                <select name={`${schedule.id}-hour`} onChange={handleChange}>
+                                    <option value={'invalid'}>-- Seleccione una hora --</option>
+                                    {availableHours.length !== 0 && availableHours[index].map((hour) => (
+                                        <option value={hour}>{hour}</option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
                     ))}
+                    <button onClick={createGroup}>Enviar</button>
                 </div>
             )}
         </div>
