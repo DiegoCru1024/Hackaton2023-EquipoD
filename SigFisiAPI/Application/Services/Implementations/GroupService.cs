@@ -39,7 +39,7 @@ public class GroupService : IGroupService
         group.GroupSchedules = groupSchedules;
         var createdGroup = await _unitOfWork.Groups.AddAsync(group);
         await _unitOfWork.CommitAsync();
-        return _mapper.Map<GetGroupWithSchedules>(createdGroup);
+        return _mapper.Map<Group, GetGroupWithSchedules>(createdGroup);
     }
 
     public async Task<GetGroup?> GetGroupByIdAsync(int id)

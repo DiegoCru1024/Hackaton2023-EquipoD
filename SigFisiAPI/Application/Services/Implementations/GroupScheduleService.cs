@@ -1,6 +1,7 @@
 using Application.Contracts.GroupSchedule;
 using Application.Exceptions;
 using Application.Repositories;
+using AutoMapper;
 using Domain;
 
 namespace Application.Services.Implementations;
@@ -8,25 +9,18 @@ namespace Application.Services.Implementations;
 public class GroupScheduleService : IGroupScheduleService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public GroupScheduleService(IUnitOfWork unitOfWork)
+    public GroupScheduleService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<GetGroupSchedule>> GetUnavailableSchedules(int groupNumber, int semester)
     {
         var unavailableSchedules = await _unitOfWork.GroupSchedules.GetUnavailableSchedulesAsync(groupNumber, semester);
 
-        return unavailableSchedules.Select(x => new GetGroupSchedule()
-        {
-            CourseName = x.Group.Course.Name,
-            DayId = x.DayId,
-            DayName = x.Day.Name,
-            EndTime = x.EndTime,
-            StarTime = x.StartTime,
-            GroupNumber = x.Group.Number,
-            ClassroomCode = x.Classroom.Code
-        });
+        return _mapper.Map<List<GetGroupSchedule>>(unavailableSchedules);
     }
 }

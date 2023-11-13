@@ -22,7 +22,7 @@ public class SemesterService : ISemesterService
             Code = model.Code,
             StartDate = model.StartDate,
             EndDate = model.EndDate,
-            IsActive = true
+            IsActive = false
         };
 
         var newSemester = await _unitOfWork.Semesters.AddAsync(semester);

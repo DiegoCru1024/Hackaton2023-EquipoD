@@ -10,7 +10,7 @@ public class GroupSchedule : Base
     public int DayId { get; set; }
     public Day Day { get; set; }
     public int? ClassroomId { get; set; }
-    public Classroom Classroom { get; set; }
+    public Classroom? Classroom { get; set; }
     public int CourseDictationTypeId { get; set; }
     public CourseDictationType CourseDictationType { get; set; }
 }
