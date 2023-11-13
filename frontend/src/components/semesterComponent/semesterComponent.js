@@ -43,20 +43,24 @@ const SemesterComponent = () => {
             cancelButtonText: 'Cancelar',
             showLoaderOnConfirm: true,
             preConfirm: (result) => {
-                const selectedSemesterCode = result.value;
+                if (result.dismiss === Swal.DismissReason.cancel) {
+                    return false; 
+                }
+
+                const selectedSemesterCode = document.getElementById('selectOption').value;
                 const selectedSemester = semesters.find((semester) => semester.code === selectedSemesterCode);
 
                 return axios.put(`https://sig-fisi.application.ryonadev.me/api/Semester/${selectedSemester.id}/Activate`, {
-                    // Puedes enviar más datos según tus necesidades
                 })
                     .then(() => {
-                        fetchData(); // Actualizar la lista de semestres después de la operación
-                        return true; // Indicar a SweetAlert2 que cierre el modal
+                        fetchData(); 
+                        return true; 
                     })
                     .catch((error) => {
                         console.error('Error al activar el semestre:', error);
                     });
             },
+
         });
     };
 
@@ -64,11 +68,11 @@ const SemesterComponent = () => {
         <div className={'componentContainer'}>
             <h1>Semestres</h1>
             <Link to={'/semester/create'}>
-                <button style={{ backgroundColor: "#4caf50" }}>
+                <button className={'buttonCreate'}>
                     Crear Semestre
                 </button>
             </Link>
-            <button onClick={() => openModal()}>
+            <button className={'buttonAsign'} onClick={() => openModal()}>
                 Desginar Semestre Activo
             </button>
             <table>

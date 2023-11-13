@@ -10,6 +10,7 @@ import HomeComponent from "./components/homeComponent/homeComponent";
 import './globalStyles.scss';
 import GroupComponent from "./components/groupComponent/groupComponent";
 import CreateGroupComponent from "./components/groupComponent/subcomponents/createGroupComponent";
+import DetailGroupComponent from "./components/groupComponent/subcomponents/deteailGroupComponent";
 import UpdateGroupComponent from "./components/groupComponent/subcomponents/updateGroupComponent";
 
 
@@ -78,6 +79,14 @@ function App() {
                     element={
                         <SidebarLayout>
                             <CreateGroupComponent/>
+                        </SidebarLayout>
+                    }
+                />
+                <Route
+                    path={"/group/details/:id"}
+                    element={
+                        <SidebarLayout>
+                            <DetailGroupComponent/>
                         </SidebarLayout>
                     }
                 />

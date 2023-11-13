@@ -28,7 +28,7 @@ const DetailSemesterComponent = () => {
     return (
         <div className='componentContainer'>
             <div className={styles.detailSemester}>
-                <h2>Detalles del Semestre</h2>
+                <h1>Detalle del Semestre</h1>
                 <table className={styles.table}>
                     <tbody>
                         <tr>

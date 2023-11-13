@@ -24,10 +24,25 @@ body {
 
 .buttonDetail,
 .buttonUpdate,
-.buttonDelete {
+.buttonDelete,
+.buttonCreate,
+.buttonAsign {
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+.buttonCreate {
+  margin-right: 10px;
+}
+
+.buttonAsign {
+  background-color: #1f618d; /* o algún tono más oscuro que prefieras */
+}
+
+.buttonAsign:hover {
+  background-color: #154c6f; /* o algún tono más oscuro cuando pasa el mouse */
+}
+
 
 .buttonDetail {
   background-color: #3498db;
@@ -37,11 +52,12 @@ body {
   background-color: #2d85b0;
 }
 
-.buttonUpdate {
+.buttonUpdate, .buttonCreate {
   background-color: #4caf50;
 }
 
-.buttonUpdate:hover {
+.buttonUpdate:hover,
+.buttonCreate:hover {
   background-color: #39923d;
 }
 
