@@ -9,7 +9,6 @@ export default function CreateGroupComponent() {
     const [coursesArray, setCoursesArray] = useState([])
     const [schedulesArray, setSchedulesArray] = useState([])
     const [groupSchedule, setGroupSchedule] = useState([])
-    const [availableHours, setAvailableHours] = useState([[], []])
     const [groupData, setGroupData] = useState({
         planID: 'invalid',
         semesterID: 'invalid',
@@ -28,25 +27,19 @@ export default function CreateGroupComponent() {
         console.log(groupData)
     }
 
-    const handleScheduleChange = async (e, index) => {
-        const {name, value} = e.target
-        const [scheduleIndex, infoType] = name.split('-')
-
-        if (infoType === 'dayID') {
-            const newHours = getAvailableHours(value, scheduleIndex, groupData.courseID)
-            setAvailableHours((prevState) => ({
-                ...prevState,
-                [availableHours[index]]: newHours
-            }))
-        }
+    const handleScheduleChange = async (e) => {
+        const {name, value} = e.target;
+        const [scheduleIndex, infoType] = name.split('-');
 
         setGroupSchedule((prevState) => ({
             ...prevState,
             [scheduleIndex]: {
-                [infoType]: value
-            }
-        }))
-    }
+                ...prevState[scheduleIndex],
+                [infoType]: value,
+            },
+        }));
+    };
+
 
     const getPlans = async () => {
         try {
@@ -58,6 +51,7 @@ export default function CreateGroupComponent() {
     }
 
     const getSchedule = async () => {
+        const url = `https://sig-fisi.application.ryonadev.me/api/CourseDictationType/Search?Semester=${groupData.semesterID}&CourseId=${groupData.courseID}&StudyPlanId=${groupData.planID}`
         const hasInvalidValue = Object.values(groupData).some((value) => value === 'invalid');
 
         if (hasInvalidValue) {
@@ -66,9 +60,8 @@ export default function CreateGroupComponent() {
         }
 
         try {
-            const response = await axios.get(`https://sig-fisi.application.ryonadev.me/api/CourseDictationType/Search?Semester=${groupData.semesterID}&CourseId=${groupData.courseID}&StudyPlanId=${groupData.planID}`)
+            const response = await axios.get(url)
             setSchedulesArray(response.data)
-            console.log(response.data)
         } catch (error) {
             console.log(error)
         }
@@ -82,18 +75,6 @@ export default function CreateGroupComponent() {
             setCoursesArray(response.data)
         } catch (error) {
             console.log(error)
-        }
-    }
-
-    const getAvailableHours = async (dayID, tipoID, courseID) => {
-        console.log(`Horas para ${dayID} ${tipoID} ${courseID}`)
-        const url = ''
-        try {
-            const response = await axios.get(url)
-            return response.data
-        } catch (error) {
-            console.log(error)
-            return []
         }
     }
 
@@ -170,15 +151,19 @@ export default function CreateGroupComponent() {
             {schedulesArray.length !== 0 && (
                 <div className={styles.groupScheduleContainer}>
                     <h1>Asignar Horario</h1>
-                    {schedulesArray.map((schedule, index) => (
+                    {schedulesArray.map((schedule) => (
                         <div key={schedule.id} className={styles.scheduleMap}>
                             <div>
                                 <label>Tipo de Dictado:</label>
                                 <input type={'text'} readOnly={true} value={schedule.name}/>
                             </div>
                             <div>
+                                <label>Horas de Dictado:</label>
+                                <input type={'text'} readOnly={true} value={schedule.name}/>
+                            </div>
+                            <div>
                                 <label> Ingrese el día: </label>
-                                <select name={`${schedule.id}-dayID`} onChange={(e) => handleScheduleChange(e, index)}>
+                                <select name={`${schedule.id}-dayID`} onChange={handleScheduleChange}>
                                     <option value={'invalid'}>-- Seleccione un día --</option>
                                     <option value={'1'}>Lunes</option>
                                     <option value={'2'}>Martes</option>
@@ -190,15 +175,20 @@ export default function CreateGroupComponent() {
                             </div>
                             <div>
                                 <label> Ingrese la hora: </label>
-                                <select name={`${schedule.id}-hour`} onChange={handleChange}>
+                                <select name={`${schedule.id}-hour`} onChange={handleScheduleChange}>
                                     <option value={'invalid'}>-- Seleccione una hora --</option>
-                                    {availableHours.length !== 0 && availableHours[index].map((hour) => (
-                                        <option value={hour}>{hour}</option>
-                                    ))}
+                                    <option value={1}>1</option>
+                                    <option value={2}>2</option>
+                                    <option value={3}>3</option>
                                 </select>
                             </div>
                         </div>
                     ))}
+
+                    <div>
+                        
+                    </div>
+
                     <button onClick={createGroup}>Enviar</button>
                 </div>
             )}

@@ -12,6 +12,28 @@ class MessageMediator {
             console.log('Alerta enviada...')
         });
     }
+
+    showDeleteConfirmation = () => {
+        Swal.fire({
+            title: "¿Desea borrar el registro?",
+            text: "Esta acción es irreversible!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Confirmar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Eliminado",
+                    text: "El registro se eliminó correctamente.",
+                    icon: "success"
+                });
+            }
+
+            return result.isConfirmed
+        });
+    }
 }
 
 export default MessageMediator
