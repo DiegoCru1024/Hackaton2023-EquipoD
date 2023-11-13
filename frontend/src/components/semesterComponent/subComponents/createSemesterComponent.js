@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import styles from './createSemesterStyles.module.scss';
 
 const CreateSemesterComponent = () => {
@@ -17,48 +18,64 @@ const CreateSemesterComponent = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Semester Details:', { semesterName, startDate, endDate });
+    const newSemester = {
+      code: semesterName,
+      startDate: startDate,
+      endDate: endDate,
+    };
+
+    try {
+      const response = await axios.post('https://sig-fisi.application.ryonadev.me/api/Semester', newSemester);
+      console.log('Semester created successfully:', response.data);
+      setSemesterName('');
+      setStartDate('');
+      setEndDate('');
+    } catch (error) {
+      console.error('Error creating semester:', error);
+    }
   };
 
   return (
-    <form className={styles.createSemester} onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="semesterName">Nombre del Semestre:</label>
-        <input
-          type="text"
-          id="semesterName"
-          name="semesterName"
-          value={semesterName}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="startDate">Fecha de Inicio:</label>
-        <input
-          type="date"
-          id="startDate"
-          name="startDate"
-          value={startDate}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="endDate">Fecha de Fin:</label>
-        <input
-          type="date"
-          id="endDate"
-          name="endDate"
-          value={endDate}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      <button type="submit">Crear Semestre</button>
-    </form>
+    <div className='componentContainer'>
+      <form className={styles.createSemester} onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="semesterName">Nombre del Semestre:</label>
+          <input
+            type="text"
+            id="semesterName"
+            name="semesterName"
+            value={semesterName}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="startDate">Fecha de Inicio:</label>
+          <input
+            type="date"
+            id="startDate"
+            name="startDate"
+            value={startDate}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="endDate">Fecha de Fin:</label>
+          <input
+            type="date"
+            id="endDate"
+            name="endDate"
+            value={endDate}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <button type="submit">Crear Semestre</button>
+      </form>
+    </div>
   );
 };
 

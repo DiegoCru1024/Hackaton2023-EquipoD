@@ -1,14 +1,12 @@
-/* createSemesterComponent.module.scss */
-
-.createSemester {
-  max-width: 400px;
+.createSemester { 
   margin: 20px;
+  align-items: center;
   padding: 15px;
   border: 1px solid #ddd;
   border-radius: 5px;
 
   div {
-    margin-bottom: 10px;
+    margin-bottom: 25px;
 
     label {
       display: block;
@@ -17,7 +15,6 @@
 
     input {
       width: 100%;
-      padding: 8px;
       border: 1px solid #ddd;
       border-radius: 3px;
     }
@@ -25,6 +22,7 @@
 
   button {
     background-color: #4caf50;
+    width: 100%;
     color: white;
     padding: 10px;
     border: none;

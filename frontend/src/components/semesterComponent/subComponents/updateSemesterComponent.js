@@ -1,59 +1,96 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import styles from './updateSemesterStyles.module.scss';
+import axios from 'axios';
 
-const UpdateSemesterComponent = ({ initialSemesterDetails, onUpdate }) => {
-  const [semesterDetails, setSemesterDetails] = useState(initialSemesterDetails);
+const UpdateSemesterComponent = () => {
+  const { id } = useParams();
+  const [semester, setSemester] = useState({
+  });
+
+  useEffect(() => {
+    axios.get(`http://sig-fisi.application.ryonadev.me/api/Semester/${id}`)
+      .then(response => {
+        setSemester(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching semester data:', error);
+      });
+  }, [id]);
+
+  const formatDate = (dateString) => {
+    const dateObject = new Date(dateString);
+    const formattedDate = dateObject.toISOString().split('T')[0];
+    console.log("Fecha después del fomato")
+    console.log(formatDate)
+    return formattedDate;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setSemesterDetails({
-      ...semesterDetails,
+    setSemester(prevSemester => ({
+      ...prevSemester,
       [name]: value,
-    });
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleUpdateSemester = async (e) => {
     e.preventDefault();
-    onUpdate(semesterDetails);
+
+    const formattedStartDate = formatDate(semester.startDate);
+    const formattedEndDate = formatDate(semester.endDate);
+
+    const updatedSemester = {
+      ...semester,
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+    };
+
+    try {
+      await axios.put(`https://sig-fisi.application.ryonadev.me/api/Semester/${id}`, updatedSemester);
+    } catch (error) {
+      console.error('Error updating semester:', error);
+    }
   };
 
   return (
-    <form className={styles.updateSemester} onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="semesterName">Nombre del Semestre:</label>
-        <input
-          type="text"
-          id="semesterName"
-          name="name"
-          value={semesterDetails.name}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="startDate">Fecha de Inicio:</label>
-        <input
-          type="date"
-          id="startDate"
-          name="startDate"
-          value={semesterDetails.startDate}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="endDate">Fecha de Fin:</label>
-        <input
-          type="date"
-          id="endDate"
-          name="endDate"
-          value={semesterDetails.endDate}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      <button type="submit">Actualizar Semestre</button>
-    </form>
+
+    <div className='componentContainer'>
+      <form className={styles.updateSemester} onSubmit={handleUpdateSemester}>
+        <div>
+          <label htmlFor="semesterName">Nombre del Semestre:</label>
+          <input
+            type="text"
+            id="semesterName"
+            name="code"
+            value={semester.code}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="startDate">Fecha de Inicio:</label>
+          <input
+            type="date"
+            id="startDate"
+            name="startDate"
+            value={semester.startDate}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="endDate">Fecha de Fin:</label>
+          <input
+            type="date"
+            id="endDate"
+            name="endDate"
+            value={semester.endDate}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <button style={{ backgroundColor: "#4caf50"}} type="submit">Actualizar Semestre</button>
+      </form>
+    </div>
   );
 };
 
