@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
-import styles from './semesterStyles.module.scss';
+import { AiOutlineEye, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
+import Swal from "sweetalert2";
 
 const SemesterComponent = () => {
-
     const [semesters, setSemesters] = useState([]);
 
     useEffect(() => {
@@ -29,11 +29,28 @@ const SemesterComponent = () => {
         }
     };
 
+    const handleMessageConfirmation = (id) => {
+        Swal.fire({
+            title: "¿Desea borrar el registro?",
+            text: "Esta acción es irreversible!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Cancelar",
+            confirmButtonText: "Confirmar"
+        }).then((result) => {
+            if(result.isConfirmed){
+                handleDeleteSemester(id)
+            }
+        });
+    }
+
     return (
         <div className={'componentContainer'}>
             <h1>Semestres</h1>
             <Link to={'/semester/create'}>
-                <button style={{ backgroundColor: "#4caf50"}}>
+                <button style={{ backgroundColor: "#4caf50" }}>
                     Crear Semestre
                 </button>
             </Link>
@@ -54,12 +71,18 @@ const SemesterComponent = () => {
                             <td>{semester.endDate}</td>
                             <td>
                                 <Link to={`/semester/details/${semester.id}`}>
-                                    <button style={{ backgroundColor: "#3498db"}}>Ver</button>
+                                    <button title="Ver" className={'buttonDetail'}>
+                                        <AiOutlineEye />
+                                    </button>
                                 </Link>
                                 <Link to={`/semester/update/${semester.id}`}>
-                                    <button style={{ backgroundColor: "#4caf50"}} >Editar</button>
+                                    <button title="Editar" className={'buttonUpdate'} >
+                                        <AiOutlineEdit />
+                                    </button>
                                 </Link>
-                                <button style={{ backgroundColor: "#c0392b"}} onClick={() => handleDeleteSemester(semester.id)}>Eliminar</button>
+                                <button title="Eliminar" className={'buttonDelete'} onClick={() => handleMessageConfirmation(semester.id)}>
+                                    <AiOutlineDelete />
+                                </button>
                             </td>
                         </tr>
                     ))}
@@ -68,5 +91,4 @@ const SemesterComponent = () => {
         </div>
     );
 };
-
 export default SemesterComponent;

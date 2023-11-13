@@ -1,7 +1,8 @@
 import styles from './groupStyles.module.scss'
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { AiOutlineEye, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 
 export default function GroupComponent() {
     const [semesterInfo, setSemesterInfo] = useState({
@@ -77,40 +78,46 @@ export default function GroupComponent() {
             <div className={styles.semesterInfoContainer}>
                 <div>
                     <label>Semestre Activo</label>
-                    <input type={'text'} readOnly={true} value={semesterInfo.semesterName}/>
+                    <input type={'text'} readOnly={true} value={semesterInfo.semesterName} />
                 </div>
                 <Link to={'/group/create'}>
-                    <button>Crear Grupo</button>
+                    <button className={'buttonCreate'} >Crear Grupo</button>
                 </Link>
             </div>
             <table>
                 <thead>
-                <tr>
-                    <th>Curso</th>
-                    <th>Semestre</th>
-                    <th>Grupo</th>
-                    <th>Tope</th>
-                    <th>Acciones</th>
-                </tr>
+                    <tr>
+                        <th>Curso</th>
+                        <th>Semestre</th>
+                        <th>Grupo</th>
+                        <th>Tope</th>
+                        <th>Acciones</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {groupArray.map((group) => (
-                    <tr>
-                        <td>{group.groupID}</td>
-                        <td>{group.semesterID}</td>
-                        <td>{group.courseID}</td>
-                        <td>{group.groupCapacity}</td>
-                        <td>
-                            <Link to={`/group/details/${group.groupID}`}>
-                                <button>Ver</button>
-                            </Link>
-                            <Link to={`/group/update/${group.groupID}`}>
-                                <button>Editar</button>
-                            </Link>
-                            <button onClick={() => handleDelete(group.groupID)}>Eliminar</button>
-                        </td>
-                    </tr>
-                ))}
+                    {groupArray.map((group) => (
+                        <tr>
+                            <td>{group.groupID}</td>
+                            <td>{group.semesterID}</td>
+                            <td>{group.courseID}</td>
+                            <td>{group.groupCapacity}</td>
+                            <td>
+                                <Link to={`/group/details/${group.groupID}`}>
+                                    <button className={'buttonDetail'}>
+                                        <AiOutlineEye />
+                                    </button>
+                                </Link>
+                                <Link to={`/group/update/${group.groupID}`}>
+                                    <button className={'buttonUpdate'}>
+                                        <AiOutlineEdit />
+                                    </button>
+                                </Link>
+                                <button className={'buttonDelete'} onClick={() => handleDelete(group.groupID)}>
+                                    <AiOutlineDelete />
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

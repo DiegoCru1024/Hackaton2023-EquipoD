@@ -29,9 +29,9 @@ class MessageMediator {
                     text: "El registro se eliminó correctamente.",
                     icon: "success"
                 });
+                return true
             }
-
-            return result.isConfirmed
+            return false
         });
     }
 }

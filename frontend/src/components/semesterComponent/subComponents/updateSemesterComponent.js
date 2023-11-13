@@ -21,8 +21,6 @@ const UpdateSemesterComponent = () => {
   const formatDate = (dateString) => {
     const dateObject = new Date(dateString);
     const formattedDate = dateObject.toISOString().split('T')[0];
-    console.log("Fecha después del fomato")
-    console.log(formatDate)
     return formattedDate;
   };
 
@@ -63,7 +61,7 @@ const UpdateSemesterComponent = () => {
             type="text"
             id="semesterName"
             name="code"
-            value={semester.code}
+            value={semester.code || ''}
             onChange={handleInputChange}
           />
         </div>
@@ -73,7 +71,7 @@ const UpdateSemesterComponent = () => {
             type="date"
             id="startDate"
             name="startDate"
-            value={semester.startDate}
+            value={semester.startDate ? semester.startDate.split('T')[0] : ''}
             onChange={handleInputChange}
           />
         </div>
@@ -83,12 +81,12 @@ const UpdateSemesterComponent = () => {
             type="date"
             id="endDate"
             name="endDate"
-            value={semester.endDate}
+            value={semester.endDate ? semester.endDate.split('T')[0] : ''}
             onChange={handleInputChange}
             required
           />
         </div>
-        <button style={{ backgroundColor: "#4caf50"}} type="submit">Actualizar Semestre</button>
+        <button style={{ backgroundColor: "#4caf50"}} type="submit">Editar Semestre</button>
       </form>
     </div>
   );

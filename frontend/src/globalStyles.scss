@@ -20,6 +20,40 @@ body {
   box-sizing: border-box;
 }
 
+/* options for action buttons*/
+
+.buttonDetail,
+.buttonUpdate,
+.buttonDelete {
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.buttonDetail {
+  background-color: #3498db;
+}
+
+.buttonDetail:hover {
+  background-color: #2d85b0;
+}
+
+.buttonUpdate {
+  background-color: #4caf50;
+}
+
+.buttonUpdate:hover {
+  background-color: #39923d;
+}
+
+.buttonDelete {
+  background-color: #c0392b;
+}
+
+.buttonDelete:hover {
+  background-color: #a53024;
+}
+
+
 label {
   margin-bottom: 0.5rem;
   --tw-text-opacity: 1;
@@ -46,8 +80,8 @@ input {
   /*Transicion*/
   transition-duration: 300ms;
   transition-property: color, background-color, border-color,
-  text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-  backdrop-filter;
+    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+    backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
   /*Border*/
@@ -98,8 +132,8 @@ select {
   /*Transicion*/
   transition-duration: 300ms;
   transition-property: color, background-color, border-color,
-  text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-  backdrop-filter;
+    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+    backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
   /*Border*/
@@ -146,14 +180,16 @@ table {
   border-collapse: collapse;
   margin-top: 20px;
 
-  th, td {
+  th,
+  td {
     width: 20%;
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
   }
 
-  th, td:last-child {
+  th,
+  td:last-child {
     text-align: center;
   }
 
