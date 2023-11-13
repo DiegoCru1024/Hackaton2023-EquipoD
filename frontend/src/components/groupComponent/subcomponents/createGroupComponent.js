@@ -3,8 +3,10 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import MessageMediator from "../../../mediators/messageMediator";
 import ScheduleComponent from "./scheduleComponent";
+import {useNavigate} from "react-router-dom";
 
 export default function CreateGroupComponent() {
+    const navigate = useNavigate()
     const messageMediator = new MessageMediator()
     const [planArray, setPlanArray] = useState([])
     const [coursesArray, setCoursesArray] = useState([])
@@ -189,9 +191,9 @@ export default function CreateGroupComponent() {
         const url = 'https://sig-fisi.application.ryonadev.me/api/Group'
 
         try {
-            const response = await axios.post(url, bodyObject)
+            await axios.post(url, bodyObject)
             messageMediator.showMessage('Se registro el grupo correctamente...', 'success')
-            console.log(response.data)
+            navigate('/group')
         } catch (error) {
             console.log(error)
         }
