@@ -41,6 +41,7 @@ public class GroupScheduleRepository : GenericRepository<GroupSchedule>, IGroupS
         return await DbSet.Include(x => x.Group)
             .ThenInclude(x => x.Course)
             .Include(x => x.CourseDictationType)
+            .Include(x => x.Classroom)
             .ToListAsync();
     }
 }

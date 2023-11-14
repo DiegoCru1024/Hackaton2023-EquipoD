@@ -19,7 +19,7 @@ public class GroupScheduleProfile : Profile
             .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => (int)Math.Round(src.EndTime.TotalHours)))
             .ForMember(dest => dest.DayName, opt => opt.MapFrom(src => src.Day.Name))
             .ForMember(dest => dest.DayId, opt => opt.MapFrom(src => src.DayId))
-            .ForMember(dest => dest.ClassroomCode, opt => opt.MapFrom(src => src.ClassroomId))
+            .ForMember(dest => dest.ClassroomCode, opt => opt.MapFrom(src => src.Classroom.Code))
             .ForMember(dest => dest.CourseDictationTypeName, opt => opt.MapFrom(src => src.CourseDictationType.Name))
             .ForMember(dest => dest.DayName, opt => opt.MapFrom(src => src.Day.Name))
             .ForMember(dest => dest.Limit, opt => opt.MapFrom(src => src.Group.Limit));
