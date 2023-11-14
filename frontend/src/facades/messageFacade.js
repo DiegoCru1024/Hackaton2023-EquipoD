@@ -1,9 +1,9 @@
 import Swal from "sweetalert2";
 import ReactDOMServer from "react-dom/server";
 import SemesterForm from "./formToActiveSemester";
-import ClassroomForm from "./formToSelectClassroom";
 import axios from "axios";
 import React from "react";
+import ClassroomForm from "./formToSelectClassroom";
 
 class MessageFacade {
     showMessage = (message, type) => {
@@ -56,7 +56,7 @@ class MessageFacade {
     openModalSemester = (semesters, fetchData) => {
         Swal.fire({
             title: 'Activar Semestre',
-            html: ReactDOMServer.renderToString(<SemesterForm semesterOptions={semesters}/>),
+            html: ReactDOMServer.renderToString(<SemesterForm semesterOptions={semesters} />),
             showCancelButton: true,
             confirmButtonText: 'Activar',
             cancelButtonText: 'Cancelar',
@@ -82,20 +82,34 @@ class MessageFacade {
         });
     };
 
-    openModalClassroom = (classroomsAvaibles) => {
+    openModalClassroom = (classroomsAvaibles, idSchedule) => {
         Swal.fire({
             title: 'Asignar Aula',
-            html: ReactDOMServer.renderToString(<ClassroomForm classroomOptions={classroomsAvaibles}/>),
+            html: ReactDOMServer.renderToString(<ClassroomForm classroomOptions={classroomsAvaibles} />),
             showCancelButton: true,
             confirmButtonText: 'Asignar',
             cancelButtonText: 'Cancelar',
             showLoaderOnConfirm: true,
-            preConfirm: (result) => {
+            preConfirm: async (result) => {
                 if (result.dismiss === Swal.DismissReason.cancel) {
                     return false;
                 }
-            },
+                const selectedClassroomId = document.getElementById('selectOption').value;
+                console.log(selectedClassroomId)
+                console.log(idSchedule)
 
+                try {
+                    const response = await axios.put(
+                        `https://sig-fisi.application.ryonadev.me/api/GroupSchedule/AssignClassroom/${idSchedule}/${selectedClassroomId}`
+                    );
+
+                    console.log('Respuesta de la solicitud POST:', response.data);
+                    return true;
+                } catch (error) {
+                    console.error('Error al asignar aula:', error);
+                    return false;
+                }
+            },
         });
     };
 }

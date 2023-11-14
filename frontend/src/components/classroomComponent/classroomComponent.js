@@ -3,21 +3,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import MessageFacade from '../../facades/messageFacade';
 
-
 export default function ClassroomComponent() {
-    const [semesterInfo, setSemesterInfo] = useState({
+    const [semesterInfo] = useState({
         semesterID: 1,
         semesterName: '2023-II'
     })
 
-    const messageFacade = new MessageFacade();
-    const [classrooms, setClassrooms] = useState([]);
     const [groupSchedules, setGroupSchedules] = useState([]);
-
-    const showModalDialog = (id) => {
-        getClassroomsAvaible(id)
-        messageFacade.openModalClassroom(classrooms)
-    }
+    const messageFacade = new MessageFacade()
 
     useEffect(() => {
         getGroupSchedulesData();
@@ -35,12 +28,15 @@ export default function ClassroomComponent() {
     const getClassroomsAvaible = async (id) => {
         try {
             const response = await axios.get(`https://sig-fisi.application.ryonadev.me/api/Classroom/GetAllAvailable/${id}`);
-            console.log("Data aulas disponibles")
-            setClassrooms(response.data);
-
+            return response.data
         } catch (error) {
             console.error('Error fetching classrooms data:', error);
         }
+    }
+
+    const showModalDialog = async (idSchedule) => {
+        const array = await getClassroomsAvaible(idSchedule)
+        messageFacade.openModalClassroom(array, idSchedule)
     }
 
     return (
@@ -71,7 +67,7 @@ export default function ClassroomComponent() {
                             <td>{schedule.limit}</td>
                             <td>
                                 <button onClick={() => showModalDialog(schedule.id)} className={'buttonAsign'}>
-                                    Asignar Aula
+                                    Asignar
                                 </button>
                             </td>
                         </tr>
