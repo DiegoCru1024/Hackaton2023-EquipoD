@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styles from './createSemesterStyles.module.scss';
-import MessageMediator from '../../../mediators/messageMediator';
+import MessageFacade from '../../../facades/messageFacade';
 import { useNavigate } from 'react-router-dom'; 
 
 const CreateSemesterComponent = () => {
   const navigate = useNavigate();
-  const messageMediator = new MessageMediator()
+  const messageMediator = new MessageFacade()
   const [semesterName, setSemesterName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');

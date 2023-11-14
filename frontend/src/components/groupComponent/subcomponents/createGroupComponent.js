@@ -1,13 +1,13 @@
 import styles from "./createGroupStyles.module.scss";
 import axios from "axios";
 import {useEffect, useState} from "react";
-import MessageMediator from "../../../mediators/messageMediator";
+import MessageFacade from "../../../facades/messageFacade";
 import ScheduleComponent from "./scheduleComponent";
 import {useNavigate} from "react-router-dom";
 
 export default function CreateGroupComponent() {
     const navigate = useNavigate()
-    const messageMediator = new MessageMediator()
+    const messageMediator = new MessageFacade()
     const [planArray, setPlanArray] = useState([])
     const [coursesArray, setCoursesArray] = useState([])
     const [schedulesArray, setSchedulesArray] = useState([])
