@@ -10,5 +10,6 @@ public interface IGroupScheduleService
         int studyPlanId);
     Task<IEnumerable<GetGroupSchedule>> GetUnavailableSchedules(int groupNumber, int semester);
     Task<GetGroupSchedule> AssignClassroom(int scheduleId, int classroomId);
+    Task<GetGroupSchedule> UpdateClassroom(int scheduleId, int classroomId);
     Task<IEnumerable<GetGroupSchedule>> GetSchedulesWithoutClassroom();
 }

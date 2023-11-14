@@ -31,6 +31,13 @@ public class SemesterController : ControllerBase
         return Ok(semester);
     }
 
+    [HttpGet("Active")]
+    public async Task<IActionResult> GetActiveSemester()
+    {
+        var semester = await _semesterService.GetActiveSemesterAsync();
+        return Ok(semester);
+    }
+
     [HttpGet("All")]
     public async Task<IActionResult> GetAllSemesters()
     {

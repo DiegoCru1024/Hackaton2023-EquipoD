@@ -2,6 +2,7 @@ using Application.Contracts.Group;
 using Application.Contracts.Semester;
 using Application.Exceptions;
 using Application.Repositories;
+using AutoMapper;
 using Domain;
 
 namespace Application.Services.Implementations;
@@ -9,34 +10,23 @@ namespace Application.Services.Implementations;
 public class SemesterService : ISemesterService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public SemesterService(IUnitOfWork unitOfWork)
+    public SemesterService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     public async Task<GetSemester> CreateSemesterAsync(CreateSemester model)
     {
-        var semester = new Semester
-        {
-            Code = model.Code,
-            StartDate = model.StartDate,
-            EndDate = model.EndDate,
-            IsActive = false
-        };
+        var semester = _mapper.Map<Semester>(model);
 
         var newSemester = await _unitOfWork.Semesters.AddAsync(semester);
 
         await _unitOfWork.CommitAsync();
 
-        return new GetSemester()
-        {
-            Id = newSemester.Id,
-            Code = newSemester.Code,
-            StartDate = newSemester.StartDate,
-            EndDate = newSemester.EndDate,
-            IsActive = newSemester.IsActive
-        };
+        return _mapper.Map<GetSemester>(newSemester);
     }
 
     public async Task<GetSemester> GetSemesterAsync(int id)
@@ -48,27 +38,25 @@ public class SemesterService : ISemesterService
             throw new NotFoundException(nameof(Semester), id);
         }
 
-        return new GetSemester()
+        return _mapper.Map<GetSemester>(semester);
+    }
+
+    public async Task<GetSemester> GetActiveSemesterAsync()
+    {
+        var semester = await _unitOfWork.Semesters.GetActiveSemester();
+
+        if (semester == null)
         {
-            Id = semester.Id,
-            Code = semester.Code,
-            StartDate = semester.StartDate,
-            EndDate = semester.EndDate,
-            IsActive = semester.IsActive
-        };
+            throw new AppException("No hay un semestre activo");
+        }
+
+        return _mapper.Map<GetSemester>(semester);
     }
 
     public async Task<IEnumerable<GetSemester>> GetAllSemestersAsync()
     {
         var semesters = await _unitOfWork.Semesters.GetAllAsync();
-        return semesters.Select(x => new GetSemester()
-        {
-            Id = x.Id,
-            Code = x.Code,
-            StartDate = x.StartDate,
-            EndDate = x.EndDate,
-            IsActive = x.IsActive
-        });
+        return _mapper.Map<List<GetSemester>>(semesters);
     }
 
     public async Task<GetSemester> UpdateSemesterAsync(int id, UpdateSemester model)
@@ -88,14 +76,7 @@ public class SemesterService : ISemesterService
 
         await _unitOfWork.CommitAsync();
 
-        return new GetSemester()
-        {
-            Id = updatedSemester.Id,
-            Code = updatedSemester.Code,
-            StartDate = updatedSemester.StartDate,
-            EndDate = updatedSemester.EndDate,
-            IsActive = updatedSemester.IsActive
-        };
+        return _mapper.Map<GetSemester>(updatedSemester);
     }
 
     public async Task DeleteSemesterAsync(int id)

@@ -72,7 +72,35 @@ public class GroupScheduleService : IGroupScheduleService
         await _unitOfWork.CommitAsync();
         return _mapper.Map<GetGroupSchedule>(schedule);
     }
-    
+
+    public async Task<GetGroupSchedule> UpdateClassroom(int scheduleId, int classroomId)
+    {
+        var schedule = await _unitOfWork.GroupSchedules.GetByIdAsync(scheduleId);
+        if (schedule == null)
+        {
+            throw new NotFoundException(nameof(GroupSchedule), scheduleId);
+        }
+
+        var classroom = await _unitOfWork.Classrooms.GetByIdAsync(classroomId);
+        if (classroom == null)
+        {
+            throw new NotFoundException(nameof(Classroom), classroomId);
+        }
+
+        var availableClassrooms = await _unitOfWork.Classrooms.GetAvailableClassroomsByScheduleAndCapacity(schedule.StartTime, schedule.EndTime, schedule.DayId, schedule.Group.Limit);
+
+        var classroomIsAvailable = availableClassrooms.Any(x => x.Id == classroom.Id);
+
+        if (!classroomIsAvailable)
+        {
+            throw new AppException("El aula no esta disponible para ese horario");
+        }
+
+        schedule.ClassroomId = classroom.Id;
+        await _unitOfWork.CommitAsync();
+        return _mapper.Map<GetGroupSchedule>(schedule);
+    }
+
     public async Task<IEnumerable<GetGroupSchedule>> GetSchedulesWithoutClassroom()
     {
         var schedules = (await _unitOfWork.GroupSchedules.GetSchedulesWithoutClassroom())
