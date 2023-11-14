@@ -13,6 +13,7 @@ const ClassroomForm = ({ classroomOptions, idSchedule }) => {
       </select>
     </form>
   );
+
 };
 
 export default ClassroomForm;

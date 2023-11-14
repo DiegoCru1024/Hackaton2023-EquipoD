@@ -1,9 +1,9 @@
 import Swal from "sweetalert2";
 import ReactDOMServer from "react-dom/server";
 import SemesterForm from "./formToActiveSemester";
-import axios from "axios";
-import React from "react";
 import ClassroomForm from "./formToSelectClassroom";
+import axios from "../axios/axiosInstance";
+import React from "react";
 
 class MessageFacade {
     showMessage = (message, type) => {
@@ -18,21 +18,21 @@ class MessageFacade {
         });
     }
 
-    messageSuccessCreated = () => {
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "El registro se creó correctamente",
-            timer: 3000
-        })
-    }
-
-    messageSuccessUpdated = () => {
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "El registro editó correctamente",
-            timer: 3000
+    showConformationToast = (message) => {
+        Toast.fire({
+            icon: 'success',
+            title: message,
+            toast: true,
+            position: "bottom-right",
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+        }).then(() => {
+            console.log('Toast enviado...')
         })
     }
 
@@ -69,7 +69,7 @@ class MessageFacade {
                 const selectedSemesterCode = document.getElementById('selectOption').value;
                 const selectedSemester = semesters.find((semester) => semester.code === selectedSemesterCode);
 
-                return axios.put(`https://sig-fisi.application.ryonadev.me/api/Semester/${selectedSemester.id}/Activate`, {})
+                return axios.put(`/api/Semester/${selectedSemester.id}/Activate`, {})
                     .then(() => {
                         fetchData();
                         return true;

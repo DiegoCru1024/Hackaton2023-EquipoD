@@ -1,11 +1,11 @@
 import styles from './groupStyles.module.scss'
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../axios/axiosInstance";
 import { Link } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 
 export default function GroupComponent() {
-    const [semesterInfo, setSemesterInfo] = useState({
+    const [semesterInfo] = useState({
         semesterID: 1,
         semesterName: '2023-II'
     })
@@ -18,7 +18,7 @@ export default function GroupComponent() {
     
     const getGroupData = async () => {
         try {
-            const response = await axios.get('https://sig-fisi.application.ryonadev.me/api/Group/GetAll');
+            const response = await axios.get('/api/Group/GetAll');
             setGroups(response.data);
             console.log(groups)
         } catch (error) {
