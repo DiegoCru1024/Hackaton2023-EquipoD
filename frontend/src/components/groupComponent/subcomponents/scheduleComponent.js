@@ -1,7 +1,9 @@
 import React from 'react';
 import styles from "./scheduleStyles.module.scss";
 
-export default function ScheduleComponent({blockedHours, selectedHours}) {
+export default function ScheduleComponent({blockedHours, selectedObject}) {
+    const selectedHours = selectedObject.indexes
+
     const scheduleHours = [
         {text: '08:00 - 09:00'},
         {text: '09:00 - 10:00'},
@@ -18,6 +20,11 @@ export default function ScheduleComponent({blockedHours, selectedHours}) {
         {text: '20:00 - 21:00'},
         {text: '21:00 - 22:00'}
     ];
+
+    const getLabelForRowAndColumn = (rowIndex, colIndex) => {
+        const selectedHourIndex = selectedHours.findIndex(coord => coord[0] === rowIndex && coord[1] === colIndex);
+        return selectedObject.labels[selectedHourIndex];
+    };
 
 
     const isCellUnavailable = (rowIndex, colIndex) => {
@@ -52,7 +59,13 @@ export default function ScheduleComponent({blockedHours, selectedHours}) {
                             <td
                                 key={colIndex}
                                 className={`${isCellUnavailable(rowIndex, colIndex) ? styles.redCell : ''} ${isCellSelected(rowIndex, colIndex) ? styles.greenCell : ''}`}
-                            ></td>
+                            >
+                                {
+                                    isCellSelected(rowIndex, colIndex) && (
+                                        <p>{getLabelForRowAndColumn(rowIndex, colIndex)}</p>
+                                    )
+                                }
+                            </td>
                         ))}
                     </tr>
                 ))}
