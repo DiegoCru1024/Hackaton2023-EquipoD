@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
 import ReactDOMServer from "react-dom/server";
-import MyForm from "./formToActiveSemester";
+import SemesterForm from "./formToActiveSemester";
+import ClassroomForm from "./formToSelectClassroom";
 import axios from "axios";
 import React from "react";
 
@@ -55,7 +56,7 @@ class MessageFacade {
     openModalSemester = (semesters, fetchData) => {
         Swal.fire({
             title: 'Activar Semestre',
-            html: ReactDOMServer.renderToString(<MyForm semesterOptions={semesters}/>),
+            html: ReactDOMServer.renderToString(<SemesterForm semesterOptions={semesters}/>),
             showCancelButton: true,
             confirmButtonText: 'Activar',
             cancelButtonText: 'Cancelar',
@@ -75,6 +76,35 @@ class MessageFacade {
                     })
                     .catch((error) => {
                         console.error('Error al activar el semestre:', error);
+                    });
+            },
+
+        });
+    };
+
+    openModalClassroom = (classrooms, getClassrooms) => {
+        Swal.fire({
+            title: 'Asignar Aula',
+            html: ReactDOMServer.renderToString(<ClassroomForm classroomOptions={classrooms}/>),
+            showCancelButton: true,
+            confirmButtonText: 'Asignar',
+            cancelButtonText: 'Cancelar',
+            showLoaderOnConfirm: true,
+            preConfirm: (result) => {
+                if (result.dismiss === Swal.DismissReason.cancel) {
+                    return false;
+                }
+
+                const selectedSemesterCode = document.getElementById('selectOption').value;
+                const selectedSemester = classrooms.find((semester) => semester.code === selectedSemesterCode);
+
+                return axios.put(`https://sig-fisi.application.ryonadev.me/api/Semester/${selectedSemester.id}/Activate`, {})
+                    .then(() => {
+                        getClassrooms();
+                        return true;
+                    })
+                    .catch((error) => {
+                        console.error('Error al asignar aula:', error);
                     });
             },
 

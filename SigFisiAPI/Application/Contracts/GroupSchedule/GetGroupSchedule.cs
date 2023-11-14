@@ -2,6 +2,7 @@ namespace Application.Contracts.GroupSchedule;
 
 public class GetGroupSchedule
 {
+    public int Id { get; set; }
     public string CourseName { get; set; }
     public int GroupNumber { get; set; }
     public string CourseDictationTypeName { get; set; }
