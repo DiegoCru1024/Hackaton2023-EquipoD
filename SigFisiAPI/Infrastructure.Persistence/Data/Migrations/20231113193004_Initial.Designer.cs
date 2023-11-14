@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20231112191825_Initial")]
+    [Migration("20231113193004_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -316,13 +316,13 @@ namespace Infrastructure.Persistence.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("gru_iCodigo");
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<int>("CourseId")
                         .HasColumnType("int")
                         .HasColumnName("cur_iCodigo");
+
+                    b.Property<int>("Limit")
+                        .HasColumnType("int")
+                        .HasColumnName("cur_iTope");
 
                     b.Property<int>("Number")
                         .HasColumnType("int")
@@ -349,7 +349,7 @@ namespace Infrastructure.Persistence.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("gruhor_iCodigo");
 
-                    b.Property<int>("ClassroomId")
+                    b.Property<int?>("ClassroomId")
                         .HasColumnType("int")
                         .HasColumnName("aul_iCodigo");
 
@@ -461,9 +461,17 @@ namespace Infrastructure.Persistence.Data.Migrations
                         .HasColumnType("VARCHAR(8)")
                         .HasColumnName("sem_vcCodigo");
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("DATE")
+                        .HasColumnName("sem_dFechaFin");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("sem_bActive");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("DATE")
+                        .HasColumnName("sem_dFechaInicio");
 
                     b.HasKey("Id")
                         .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
@@ -491,7 +499,7 @@ namespace Infrastructure.Persistence.Data.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("plaest_bActivo");
 
-                    b.Property<string>("RR")
+                    b.Property<string>("Rr")
                         .IsRequired()
                         .HasColumnType("VARCHAR(16)")
                         .HasColumnName("plaest_vcRR");
@@ -500,7 +508,7 @@ namespace Infrastructure.Persistence.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Vigency")
-                        .HasColumnType("datetime(6)")
+                        .HasColumnType("DATE")
                         .HasColumnName("plaest_dVigencia");
 
                     b.HasKey("Id")
@@ -613,9 +621,7 @@ namespace Infrastructure.Persistence.Data.Migrations
                 {
                     b.HasOne("Domain.Classroom", "Classroom")
                         .WithMany("GroupSchedules")
-                        .HasForeignKey("ClassroomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClassroomId");
 
                     b.HasOne("Domain.CourseDictationType", "CourseDictationType")
                         .WithMany("GroupSchedules")

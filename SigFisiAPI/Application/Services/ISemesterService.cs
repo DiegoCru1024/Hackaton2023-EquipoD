@@ -9,6 +9,5 @@ public interface ISemesterService
     Task<IEnumerable<GetSemester>> GetAllSemestersAsync();
     Task<GetSemester> UpdateSemesterAsync(int id, UpdateSemester model);
     Task DeleteSemesterAsync(int id);
-    Task DeactivateSemesterAsync(int id);
     Task ActivateSemesterAsync(int id);
 }

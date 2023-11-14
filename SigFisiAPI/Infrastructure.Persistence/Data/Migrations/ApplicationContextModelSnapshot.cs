@@ -346,7 +346,7 @@ namespace Infrastructure.Persistence.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("gruhor_iCodigo");
 
-                    b.Property<int>("ClassroomId")
+                    b.Property<int?>("ClassroomId")
                         .HasColumnType("int")
                         .HasColumnName("aul_iCodigo");
 
@@ -618,9 +618,7 @@ namespace Infrastructure.Persistence.Data.Migrations
                 {
                     b.HasOne("Domain.Classroom", "Classroom")
                         .WithMany("GroupSchedules")
-                        .HasForeignKey("ClassroomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClassroomId");
 
                     b.HasOne("Domain.CourseDictationType", "CourseDictationType")
                         .WithMany("GroupSchedules")

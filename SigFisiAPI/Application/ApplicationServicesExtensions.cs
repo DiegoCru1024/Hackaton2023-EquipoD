@@ -1,3 +1,4 @@
+using System.Reflection;
 using Application.Services;
 using Application.Services.Implementations;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,7 @@ public static class ApplicationServicesExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         #region Services
         services.AddScoped<IGroupService, GroupService>();
@@ -16,6 +18,8 @@ public static class ApplicationServicesExtensions
         services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<ICourseDictationTypeService, CourseDictationTypeService>();
         services.AddScoped<IGroupScheduleService, GroupScheduleService>();
+        services.AddScoped<ICourseHoursDictatedService, CourseHoursDictatedService>();
+        services.AddScoped<IClassroomService, ClassroomService>();
         #endregion
 
         return services;

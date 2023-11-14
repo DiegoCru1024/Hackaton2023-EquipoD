@@ -148,7 +148,9 @@ namespace Infrastructure.Persistence.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     sem_vcCodigo = table.Column<string>(type: "VARCHAR(8)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    sem_bActive = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    sem_bActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    sem_dFechaInicio = table.Column<DateTime>(type: "DATE", nullable: false),
+                    sem_dFechaFin = table.Column<DateTime>(type: "DATE", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -227,7 +229,7 @@ namespace Infrastructure.Persistence.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     plaest_vcRR = table.Column<string>(type: "VARCHAR(16)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    plaest_dVigencia = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    plaest_dVigencia = table.Column<DateTime>(type: "DATE", nullable: false),
                     plaest_iCreditos = table.Column<int>(type: "int", nullable: false),
                     plaest_bActivo = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     SchoolId = table.Column<int>(type: "int", nullable: false)
@@ -374,9 +376,8 @@ namespace Infrastructure.Persistence.Data.Migrations
                 {
                     gru_iCodigo = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Code = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     gru_iNumero = table.Column<int>(type: "int", nullable: false),
+                    cur_iTope = table.Column<int>(type: "int", nullable: false),
                     sem_iCodigo = table.Column<int>(type: "int", nullable: false),
                     cur_iCodigo = table.Column<int>(type: "int", nullable: false)
                 },
@@ -411,7 +412,7 @@ namespace Infrastructure.Persistence.Data.Migrations
                     gruhor_tHoraFin = table.Column<TimeSpan>(type: "TIME", nullable: false),
                     gru_iCodigo = table.Column<int>(type: "int", nullable: false),
                     dia_iCodigo = table.Column<int>(type: "int", nullable: false),
-                    aul_iCodigo = table.Column<int>(type: "int", nullable: false),
+                    aul_iCodigo = table.Column<int>(type: "int", nullable: true),
                     curtip_iCodigo = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -422,8 +423,7 @@ namespace Infrastructure.Persistence.Data.Migrations
                         column: x => x.aul_iCodigo,
                         principalSchema: "dbo",
                         principalTable: "aula",
-                        principalColumn: "aul_iCodigo",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "aul_iCodigo");
                     table.ForeignKey(
                         name: "FK_grupo_horario_curso_tipodictado_curtip_iCodigo",
                         column: x => x.curtip_iCodigo,

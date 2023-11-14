@@ -18,4 +18,6 @@
       <ProjectReference Include="..\Infrastructure.Persistence\Infrastructure.Persistence.csproj" />
     </ItemGroup>
 
+
+
 </Project>

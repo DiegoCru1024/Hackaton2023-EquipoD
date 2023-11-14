@@ -11,6 +11,26 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
     {
     }
 
+    public override async Task<Group?> GetByIdAsync(int id)
+    {
+        return await DbSet
+            .Include(x => x.GroupSchedules)
+            .ThenInclude(y => y.CourseDictationType)
+            .Include(x => x.GroupSchedules)
+            .ThenInclude(y => y.Day)
+            .Include(x => x.GroupSchedules)
+            .ThenInclude(y => y.Classroom)
+            .Include(x => x.Course)
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public override async Task<IEnumerable<Group>> GetAllAsync()
+    {
+        return await DbSet
+            .Include(x => x.GroupSchedules)
+            .Include(x => x.Course)
+            .ToListAsync();
+    }
     public async Task<int> GetNextNumberByCourseId(int courseId)
     {
         var lastGroup = await DbSet.Where(x => x.CourseId == courseId)
@@ -18,5 +38,13 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
             .FirstOrDefaultAsync();
 
         return lastGroup?.Number + 1 ?? 1;
+    }
+
+    public async Task<Group?> GetByNumberAndCourseId(int groupNumber, int groupCourseId)
+    {
+        return await DbSet
+            .Include(x => x.GroupSchedules)
+            .Include(x => x.Course)
+            .FirstOrDefaultAsync(x => x.Number == groupNumber && x.CourseId == groupCourseId);
     }
 }

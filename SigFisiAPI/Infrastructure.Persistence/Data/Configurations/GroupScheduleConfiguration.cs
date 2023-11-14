@@ -55,8 +55,7 @@ public class GroupScheduleConfiguration : IEntityTypeConfiguration<GroupSchedule
             .IsRequired();
 
         builder.HasOne(x => x.Classroom)
-            .WithMany(x => x.GroupSchedules)
-            .IsRequired();
+            .WithMany(x => x.GroupSchedules);
 
         builder.HasOne(x => x.CourseDictationType)
             .WithMany(x => x.GroupSchedules)

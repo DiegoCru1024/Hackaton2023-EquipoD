@@ -1,5 +1,6 @@
 using Application;
 using Infrastructure.Persistence;
+using WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,8 @@ builder.Services.AddCors(options =>
 #endregion
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseSwagger();
 app.UseSwaggerUI();

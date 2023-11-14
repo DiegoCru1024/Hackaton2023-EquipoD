@@ -14,6 +14,7 @@ public class UnitOfWork : IUnitOfWork
     public ICourseRepository Courses { get; set; }
     public IStudyPlanRepository StudyPlans { get; set; }
     public ICourseDictationTypeRepository CourseDictationTypes { get; set; }
+    public ICourseHoursDictatedRepository CourseHoursDictated { get; set; }
 
     public UnitOfWork(ApplicationContext context)
     {
@@ -26,6 +27,7 @@ public class UnitOfWork : IUnitOfWork
         Courses = new CourseRepository(context);
         StudyPlans = new StudyPlanRepository(context);
         CourseDictationTypes = new CourseDictationTypeRepository(context);
+        CourseHoursDictated = new CourseHoursDictatedRepository(context);
     }
 
     public async Task CommitAsync()

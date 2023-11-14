@@ -10,5 +10,6 @@ public interface IUnitOfWork : IDisposable
     ICourseRepository Courses { get; set; }
     IStudyPlanRepository StudyPlans { get; set; }
     ICourseDictationTypeRepository CourseDictationTypes { get; set; }
+    ICourseHoursDictatedRepository CourseHoursDictated { get; set; }
     Task CommitAsync();
 }
