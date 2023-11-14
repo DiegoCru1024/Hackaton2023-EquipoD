@@ -1,3 +1,4 @@
+using Application.Contracts.Group;
 using Application.Repositories;
 using Domain;
 using Infrastructure.Persistence.Data;
@@ -31,6 +32,19 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
             .Include(x => x.Course)
             .ToListAsync();
     }
+
+    public async Task<List<int>> GetGroupNumbers(int studyPlanId, int semester)
+    {
+        var groupNumbers = await DbSet
+            .Include(x => x.Course)
+            .Where(x => x.Course.StudyPlanId == studyPlanId && x.Course.Semester == semester)
+            .Select(x => x.Number)
+            .Distinct()
+            .ToListAsync();
+
+        return groupNumbers;
+    }
+
     public async Task<int> GetNextNumberByCourseId(int courseId)
     {
         var lastGroup = await DbSet.Where(x => x.CourseId == courseId)

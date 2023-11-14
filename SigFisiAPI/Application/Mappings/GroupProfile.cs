@@ -19,5 +19,7 @@ public class GroupProfile : Profile
             .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course.Name))
             .ForMember(dest => dest.Semester, opt => opt.MapFrom(src => src.Course.Semester))
             .ForMember(dest => dest.GroupNumber, opt => opt.MapFrom(src => src.Number));
+        CreateMap<int, GetGroupNumber>()
+            .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src));
     }
 }

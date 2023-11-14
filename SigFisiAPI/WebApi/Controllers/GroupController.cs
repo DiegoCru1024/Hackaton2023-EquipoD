@@ -29,6 +29,13 @@ public class GroupController : ControllerBase
         return Ok(groups);
     }
 
+    [HttpGet("GetGroupNumbers")]
+    public async Task<IActionResult> GetByStudyPlanAndSemester(int studyPlanId, int semester)
+    {
+        var groups = await _groupService.GetNumberByStudyPlanAndSemesterAsync(studyPlanId, semester);
+        return Ok(groups);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateGroup(CreateGroup model)
     {
@@ -42,5 +49,4 @@ public class GroupController : ControllerBase
         var nextGroupNumber = await _groupService.GetNextGroupNumberByCourseId(courseId);
         return Ok(nextGroupNumber);
     }
-
 }

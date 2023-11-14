@@ -22,6 +22,13 @@ public class GroupScheduleController : ControllerBase
         return Ok(schedules);
     }
 
+    [HttpGet("Search")]
+    public async Task<IActionResult> SearchSchedules(int groupNumber, int semester, int studyPlanId)
+    {
+        var schedules = await _groupScheduleService.SearchGroupSchedule(groupNumber, semester, studyPlanId);
+        return Ok(schedules);
+    }
+
     [HttpGet("GetAllUnavailable")]
     public async Task<IActionResult> GetUnavailableSchedules(int groupNumber, int semester)
     {
@@ -34,5 +41,12 @@ public class GroupScheduleController : ControllerBase
     {
         var schedules = await _groupScheduleService.GetSchedulesWithoutClassroom();
         return Ok(schedules);
+    }
+
+    [HttpPost("AssignClassroom")]
+    public async Task<IActionResult> AssignClassroom(int scheduleId, int classroomId)
+    {
+        var schedule = await _groupScheduleService.AssignClassroom(scheduleId, classroomId);
+        return Ok(schedule);
     }
 }

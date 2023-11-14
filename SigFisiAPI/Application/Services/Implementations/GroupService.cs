@@ -83,6 +83,13 @@ public class GroupService : IGroupService
         return _mapper.Map<List<GetGroup>>(groups);
     }
 
+    public async Task<IEnumerable<GetGroupNumber>?> GetNumberByStudyPlanAndSemesterAsync(int studyPlanId, int semester)
+    {
+        var groups = await _unitOfWork.Groups.GetGroupNumbers(studyPlanId, semester);
+
+        return _mapper.Map<List<GetGroupNumber>>(groups);
+    }
+
     public async Task<int> GetNextGroupNumberByCourseId(int courseId)
     {
         var lastGroupNumber = await _unitOfWork.Groups.GetNextNumberByCourseId(courseId);
