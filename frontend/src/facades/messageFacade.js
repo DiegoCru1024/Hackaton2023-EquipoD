@@ -4,6 +4,7 @@ import SemesterForm from "./formToActiveSemester";
 import ClassroomForm from "./formToSelectClassroom";
 import axios from "axios";
 import React from "react";
+import Toast from "sweetalert2";
 
 class MessageFacade {
     showMessage = (message, type) => {
@@ -16,6 +17,25 @@ class MessageFacade {
         }).then(() => {
             console.log('Alerta enviada...')
         });
+    }
+
+    debug = async () => {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-right",
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+        })
+
+        await Toast.fire({
+            icon: 'error',
+            title: 'Completa todos los campos antes de continuar...',
+        })
     }
 
     messageSuccessCreated = () => {
@@ -82,10 +102,10 @@ class MessageFacade {
         });
     };
 
-    openModalClassroom = (classrooms, getClassrooms) => {
+    openModalClassroom = (classroomsAvaibles) => {
         Swal.fire({
             title: 'Asignar Aula',
-            html: ReactDOMServer.renderToString(<ClassroomForm classroomOptions={classrooms}/>),
+            html: ReactDOMServer.renderToString(<ClassroomForm classroomOptions={classroomsAvaibles}/>),
             showCancelButton: true,
             confirmButtonText: 'Asignar',
             cancelButtonText: 'Cancelar',
@@ -94,18 +114,6 @@ class MessageFacade {
                 if (result.dismiss === Swal.DismissReason.cancel) {
                     return false;
                 }
-
-                const selectedSemesterCode = document.getElementById('selectOption').value;
-                const selectedSemester = classrooms.find((semester) => semester.code === selectedSemesterCode);
-
-                return axios.put(`https://sig-fisi.application.ryonadev.me/api/Semester/${selectedSemester.id}/Activate`, {})
-                    .then(() => {
-                        getClassrooms();
-                        return true;
-                    })
-                    .catch((error) => {
-                        console.error('Error al asignar aula:', error);
-                    });
             },
 
         });

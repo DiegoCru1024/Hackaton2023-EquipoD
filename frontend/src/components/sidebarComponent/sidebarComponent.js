@@ -9,7 +9,6 @@ import {
     BiSolidSchool,
     BiSolidTimeFive,
     BiSolidUserCircle,
-    BiTimeFive
 } from "react-icons/bi";
 
 export default function SideBar() {
