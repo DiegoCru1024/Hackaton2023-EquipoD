@@ -14,7 +14,7 @@ public class AcademicAreaConfiguration : IEntityTypeConfiguration<AcademicArea>
 
         //Primary Key
         builder.HasKey(x => x.Id)
-            .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);;
+            .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
         //Properties
         builder.Property(x => x.Id)
