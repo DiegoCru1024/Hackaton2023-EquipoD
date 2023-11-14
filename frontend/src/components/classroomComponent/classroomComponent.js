@@ -12,7 +12,9 @@ export default function ClassroomComponent() {
     const [classrooms, setClassrooms] = useState([]);
 
     useEffect(() => {
-        getClassroomData();
+        getClassroomData().then(() => {
+            console.log('Aulas recibidas...')
+        });
     }, []);
 
     const getClassroomData = async () => {
