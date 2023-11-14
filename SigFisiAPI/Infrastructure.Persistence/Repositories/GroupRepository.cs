@@ -18,6 +18,8 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
             .ThenInclude(y => y.CourseDictationType)
             .Include(x => x.GroupSchedules)
             .ThenInclude(y => y.Day)
+            .Include(x => x.GroupSchedules)
+            .ThenInclude(y => y.Classroom)
             .Include(x => x.Course)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
