@@ -13,7 +13,10 @@ export default function CreateGroupComponent() {
     const [schedulesArray, setSchedulesArray] = useState([])
     const [groupSchedule, setGroupSchedule] = useState([])
     const [unavailableHours, setUnavailableHours] = useState([])
-    const [selectedHours, setSelectedHours] = useState([])
+    const [selectedHours, setSelectedHours] = useState({
+        indexes: [],
+        labels: []
+    })
     const [blockedHours, setBlockedHours] = useState([])
     const [groupData, setGroupData] = useState({
         planID: 'invalid',
@@ -128,6 +131,7 @@ export default function CreateGroupComponent() {
 
     const updateSelectedHours = () => {
         let cellIndexes = [];
+        let indexLabels = []
 
         for (const scheduleKey in groupData.groupSchedule) {
             const schedule = groupData.groupSchedule[scheduleKey];
@@ -138,11 +142,15 @@ export default function CreateGroupComponent() {
 
                 for (let i = 0; i < schedule.endTime - startHour; i++) {
                     cellIndexes.push([startHour + i - 8, dayNumber]);
+                    indexLabels.push(schedulesArray[parseInt(scheduleKey) - 1].dictationTypeName)
                 }
             }
         }
 
-        setSelectedHours(cellIndexes);
+        setSelectedHours({
+            indexes: cellIndexes,
+            labels: indexLabels
+        });
     };
 
     const updateBlockedHours = () => {
@@ -187,9 +195,9 @@ export default function CreateGroupComponent() {
     }
 
     const verifySelectedHours = () => {
-        return selectedHours.some((hours, index) => {
+        return selectedHours.indexes.some((hours, index) => {
             return (
-                selectedHours.findIndex(
+                selectedHours.indexes.findIndex(
                     (otherHours, otherIndex) =>
                         index !== otherIndex && hours[0] === otherHours[0] && hours[1] === otherHours[1]
                 ) !== -1
@@ -335,7 +343,7 @@ export default function CreateGroupComponent() {
                         </div>
                     ))}
 
-                    <ScheduleComponent blockedHours={blockedHours} selectedHours={selectedHours}/>
+                    <ScheduleComponent blockedHours={blockedHours} selectedObject={selectedHours}/>
 
                     <button type={'button'} onClick={createGroup}>Enviar</button>
                 </div>
