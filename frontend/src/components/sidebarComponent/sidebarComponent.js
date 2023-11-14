@@ -29,7 +29,7 @@ export default function SideBar() {
                     <BiSolidUserCircle style={{fontSize: '50px'}}/>
                     <div className={styles.userInfo}>
                         <h3>{userData.name}</h3>
-                        <p>Rol: {userData.role}</p>
+                        <p>Rol: {userRole}</p>
                     </div>
                 </div>
 
@@ -44,9 +44,9 @@ export default function SideBar() {
                     </li>
                     }
 
-                    {userRole === 'Decanato' && <li><Link to={'/group'}>
+                    <li><Link to={'/group'}>
                         <BiSolidGroup className={styles.navBarIcon}/> Grupos</Link>
-                    </li>}
+                    </li>
 
                     {userRole === 'Administrativo' && <li><Link to={'/classroom'}>
                         <BiSolidSchool className={styles.navBarIcon}/> Aulas</Link>

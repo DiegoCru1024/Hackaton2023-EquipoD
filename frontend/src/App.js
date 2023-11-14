@@ -113,6 +113,22 @@ function App() {
 
                     {userRole === 'Administrativo' && (<>
                         <Route
+                            path={"/group"}
+                            element={
+                                <SidebarLayout>
+                                    <GroupComponent/>
+                                </SidebarLayout>
+                            }
+                        />
+                        <Route
+                            path={"/group/details/:id"}
+                            element={
+                                <SidebarLayout>
+                                    <DetailGroupComponent/>
+                                </SidebarLayout>
+                            }
+                        />
+                        <Route
                             path={"/classroom"}
                             element={
                                 <SidebarLayout>
