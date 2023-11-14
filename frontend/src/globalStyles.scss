@@ -35,6 +35,10 @@ body {
   margin-right: 10px;
 }
 
+.buttonCancel {
+  background: #6e7881;
+}
+
 .buttonAsign {
   background-color: #1f618d; /* o algún tono más oscuro que prefieras */
 }
@@ -74,7 +78,7 @@ label {
   margin-bottom: 0.5rem;
   --tw-text-opacity: 1;
   color: rgb(71 85 105 / var(--tw-text-opacity));
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.25rem;
   text-transform: capitalize;
   cursor: pointer;
@@ -84,11 +88,11 @@ label {
 }
 
 input {
-  height: 25px;
+  height: 35px;
   display: block;
   width: 100%;
   border: solid;
-  font-size: 0.875rem;
+  font-size: 1rem;
   box-sizing: border-box;
   /*Color de Background*/
   background-color: rgb(255 255 255);
@@ -96,8 +100,8 @@ input {
   /*Transicion*/
   transition-duration: 300ms;
   transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-    backdrop-filter;
+  text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+  backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
   /*Border*/
@@ -136,7 +140,7 @@ input[readonly] {
 }
 
 select {
-  height: 25px;
+  height: 35px;
   display: block;
   width: 100%;
   border: solid;
@@ -148,8 +152,8 @@ select {
   /*Transicion*/
   transition-duration: 300ms;
   transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-    backdrop-filter;
+  text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+  backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
   /*Border*/
@@ -183,6 +187,7 @@ h1 {
 
 button {
   background-color: #002388;
+  font-size: 1rem;
   color: white;
   padding: 10px 15px;
   border: none;
