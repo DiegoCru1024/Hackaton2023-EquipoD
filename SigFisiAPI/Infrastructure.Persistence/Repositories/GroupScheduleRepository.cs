@@ -25,4 +25,22 @@ public class GroupScheduleRepository : GenericRepository<GroupSchedule>, IGroupS
     {
         return (await GetUnavailableSchedulesAsync(groupNumber, semester)).Where(x => x.DayId == dayId);
     }
+
+    public async Task<IEnumerable<GroupSchedule>> GetSchedulesWithoutClassroom()
+    {
+        return await DbSet.Include(x => x.Group)
+            .ThenInclude(x => x.Course)
+            .Include(x => x.CourseDictationType)
+            .Include(x => x.Day)
+            .Where(x => x.ClassroomId == null)
+            .ToListAsync();
+    }
+
+    public override async Task<IEnumerable<GroupSchedule>> GetAllAsync()
+    {
+        return await DbSet.Include(x => x.Group)
+            .ThenInclude(x => x.Course)
+            .Include(x => x.CourseDictationType)
+            .ToListAsync();
+    }
 }

@@ -10,4 +10,5 @@ public class GetGroupSchedule
     public string DayName { get; set; }
     public int DayId { get; set; }
     public int? ClassroomCode { get; set; }
+    public int Limit { get; set; }
 }

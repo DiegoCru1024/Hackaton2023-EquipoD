@@ -9,4 +9,9 @@ public class ClassroomRepository : GenericRepository<Classroom>, IClassroomRepos
     public ClassroomRepository(ApplicationContext context) : base(context)
     {
     }
+
+    public async Task<IEnumerable<Classroom>> GetAvailableClassroomsByScheduleId()
+    {
+        throw new NotImplementedException();
+    }
 }
