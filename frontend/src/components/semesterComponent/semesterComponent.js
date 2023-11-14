@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import axios from 'axios';
+import axios from "../../axios/axiosInstance";
 import {AiOutlineEye, AiOutlineEdit, AiOutlineDelete} from 'react-icons/ai';
 import MessageFacade from "../../facades/messageFacade";
 
@@ -9,12 +9,13 @@ const SemesterComponent = () => {
     const [semesters, setSemesters] = useState([]);
 
     useEffect(() => {
-        fetchData();
+        fetchData().then(() => {
+        });
     }, []);
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('https://sig-fisi.application.ryonadev.me/api/Semester/All');
+            const response = await axios.get('/api/Semester/All');
             setSemesters(response.data);
         } catch (error) {
             console.error('Error fetching semesters data:', error);
@@ -23,8 +24,9 @@ const SemesterComponent = () => {
 
     const handleDeleteSemester = async (id) => {
         try {
-            await axios.delete(`https://sig-fisi.application.ryonadev.me/api/Semester/${id}`);
-            fetchData()
+            await axios.delete(`/api/Semester/${id}`);
+            fetchData().then(() => {
+            })
         } catch (error) {
             console.error('Error deleting semester:', error);
         }

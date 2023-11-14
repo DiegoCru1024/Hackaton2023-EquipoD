@@ -38,7 +38,6 @@ export default function ScheduleComponent({blockedHours, selectedObject}) {
 
     return (
         <div className={styles.schedulePreview}>
-            <h1>Resultado</h1>
             <table>
                 <thead>
                 <tr>

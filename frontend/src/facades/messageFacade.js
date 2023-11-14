@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 import ReactDOMServer from "react-dom/server";
 import SemesterForm from "./formToActiveSemester";
 import ClassroomForm from "./formToSelectClassroom";
-import axios from "axios";
+import axios from "../axios/axiosInstance";
 import React from "react";
 import Toast from "sweetalert2";
 
@@ -19,8 +19,10 @@ class MessageFacade {
         });
     }
 
-    debug = async () => {
-        const Toast = Swal.mixin({
+    showConformationToast = (message) => {
+        Toast.fire({
+            icon: 'success',
+            title: message,
             toast: true,
             position: "bottom-right",
             iconColor: 'white',
@@ -30,29 +32,8 @@ class MessageFacade {
             showConfirmButton: false,
             timer: 5000,
             timerProgressBar: true,
-        })
-
-        await Toast.fire({
-            icon: 'error',
-            title: 'Completa todos los campos antes de continuar...',
-        })
-    }
-
-    messageSuccessCreated = () => {
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "El registro se creó correctamente",
-            timer: 3000
-        })
-    }
-
-    messageSuccessUpdated = () => {
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "El registro editó correctamente",
-            timer: 3000
+        }).then(() => {
+            console.log('Toast enviado...')
         })
     }
 
@@ -89,7 +70,7 @@ class MessageFacade {
                 const selectedSemesterCode = document.getElementById('selectOption').value;
                 const selectedSemester = semesters.find((semester) => semester.code === selectedSemesterCode);
 
-                return axios.put(`https://sig-fisi.application.ryonadev.me/api/Semester/${selectedSemester.id}/Activate`, {})
+                return axios.put(`/api/Semester/${selectedSemester.id}/Activate`, {})
                     .then(() => {
                         fetchData();
                         return true;

@@ -13,10 +13,12 @@ import {
 
 export default function SideBar() {
     const userData = useSelector((state) => state.userData)
+    const userRole = useSelector((state) => state.userData.role)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const handleLogOut = () => {
         dispatch(clearUser())
+        localStorage.removeItem('token')
         navigate('/')
     }
 
@@ -36,16 +38,20 @@ export default function SideBar() {
                         <BiSolidHome className={styles.navBarIcon}/> Inicio</Link>
                     </li>
 
-                    <li><Link to={'/semester'}>
-                        <BiSolidBook className={styles.navBarIcon}/> Semestre</Link>
+                    {userRole === 'Decanato' && <li><Link to={'/semester'}>
+                        <BiSolidBook className={styles.navBarIcon}/> Semestre
+                    </Link>
                     </li>
+                    }
 
-                    <li><Link to={'/group'}>
+                    {userRole === 'Decanato' && <li><Link to={'/group'}>
                         <BiSolidGroup className={styles.navBarIcon}/> Grupos</Link>
-                    </li>
-                    <li><Link to={'/classroom'}>
+                    </li>}
+
+                    {userRole === 'Administrativo' && <li><Link to={'/classroom'}>
                         <BiSolidSchool className={styles.navBarIcon}/> Aulas</Link>
-                    </li>
+                    </li>}
+
                     <li><Link to={'/schedule'}>
                         <BiSolidTimeFive className={styles.navBarIcon}/>Horarios</Link>
                     </li>

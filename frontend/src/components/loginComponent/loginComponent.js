@@ -1,18 +1,20 @@
 import logo from '../../assets/logo.png'
 import styles from "./loginStyles.module.scss";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {BiUserCircle, BiLock} from "react-icons/bi";
 import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setUser} from "../../redux/userSlice";
-import axios from "axios";
+import axios from "../../axios/axiosInstance";
 import MessageFacade from "../../facades/messageFacade";
+import {jwtDecode} from "jwt-decode";
 
 const iconStyle = {color: "#002388", fontSize: 30, marginRight: 5};
 
 const LoginPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const userRole = useSelector((state) => state.userData.role)
     const messageMediator = new MessageFacade()
     const [waitingResponse, setWaitingResponse] = useState(false);
     const [loginData, setLoginData] = useState({
@@ -33,24 +35,33 @@ const LoginPage = () => {
 
         try {
             setWaitingResponse(true);
-            const url = "LoginURL";
+            const url = "/api/User/Login";
             const response = await axios.post(url, loginData);
 
-            //Decodificar JWT
-            const payload = response.data.token;
+            const payload = jwtDecode(response.data.token)
+
             const userData = {
                 token: response.data.token,
                 userID: payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
+                userEmail: payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"],
                 name: payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
                 role: payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
             };
+
             dispatch(setUser(userData));
+            localStorage.setItem('token', response.data.token)
             navigate("/home");
         } catch (e) {
             setWaitingResponse(false);
             messageMediator.showMessage('Insertar error', 'error')
         }
     };
+
+    useEffect(() => {
+        if (userRole !== '') {
+            navigate('/home')
+        }
+    }, [])
 
     return (
         <div className={styles.mainContainer}>
