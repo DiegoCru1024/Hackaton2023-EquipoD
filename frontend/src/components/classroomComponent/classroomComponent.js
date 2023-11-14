@@ -9,6 +9,7 @@ export default function ClassroomComponent() {
         semesterName: '2023-II'
     })
 
+    const [classrooms, setClassrooms] = useState([])
     const [groupSchedules, setGroupSchedules] = useState([]);
     const messageFacade = new MessageFacade()
 
