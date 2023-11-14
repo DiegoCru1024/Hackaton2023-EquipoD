@@ -1,8 +1,10 @@
 using Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class StudyPlanController : ControllerBase

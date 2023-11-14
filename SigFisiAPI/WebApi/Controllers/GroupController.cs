@@ -1,9 +1,11 @@
 using Application.Contracts.Group;
 using Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class GroupController : ControllerBase
@@ -50,7 +52,12 @@ public class GroupController : ControllerBase
         return Ok(nextGroupNumber);
     }
 
-
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteGroup(int id)
+    {
+        await _groupService.DeleteGroupAsync(id);
+        return NoContent();
+    }
 
 
 }

@@ -1,10 +1,12 @@
 using Application.Contracts.CourseDictationType;
 using Application.Services;
 using Application.Services.Implementations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class CourseDictationTypeController : ControllerBase

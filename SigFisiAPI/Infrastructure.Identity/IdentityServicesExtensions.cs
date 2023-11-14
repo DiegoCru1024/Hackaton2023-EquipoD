@@ -20,7 +20,6 @@ public static class IdentityServicesExtension
     public static IServiceCollection AddIdentityServices(
         this IServiceCollection services, IConfiguration configuration)
     {
-        #region IdentityContext
 
         var connectionString = configuration.GetConnectionString("IdentityConnection");
         services.AddDbContext<IdentityContext>(options =>
@@ -39,7 +38,12 @@ public static class IdentityServicesExtension
             .AddEntityFrameworkStores<IdentityContext>()
             .AddDefaultTokenProviders();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = false,
@@ -49,8 +53,6 @@ public static class IdentityServicesExtension
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]!)),
                 ClockSkew = TimeSpan.Zero
             });
-
-        #endregion
 
 
         services.AddTransient<IUserService, UserService>();

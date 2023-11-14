@@ -114,6 +114,11 @@ public class SemesterService : ISemesterService
             throw new AppException("No se puede eliminar el semestre porque tiene grupos asociados");
         }
 
+        if (semester.IsActive)
+        {
+            throw new AppException("No se puede eliminar el semestre activo");
+        }
+
         await _unitOfWork.Semesters.DeleteAsync(semester);
 
         await _unitOfWork.CommitAsync();
