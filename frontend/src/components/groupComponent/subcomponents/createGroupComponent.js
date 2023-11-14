@@ -1,13 +1,13 @@
 import styles from "./createGroupStyles.module.scss";
 import axios from "axios";
 import {useEffect, useState} from "react";
-import MessageMediator from "../../../mediators/messageMediator";
+import MessageFacade from "../../../facades/messageFacade";
 import ScheduleComponent from "./scheduleComponent";
 import {useNavigate} from "react-router-dom";
 
 export default function CreateGroupComponent() {
     const navigate = useNavigate()
-    const messageMediator = new MessageMediator()
+    const messageMediator = new MessageFacade()
     const [planArray, setPlanArray] = useState([])
     const [coursesArray, setCoursesArray] = useState([])
     const [schedulesArray, setSchedulesArray] = useState([])
@@ -186,9 +186,25 @@ export default function CreateGroupComponent() {
         return result;
     }
 
+    const verifySelectedHours = () => {
+        return selectedHours.some((hours, index) => {
+            return (
+                selectedHours.findIndex(
+                    (otherHours, otherIndex) =>
+                        index !== otherIndex && hours[0] === otherHours[0] && hours[1] === otherHours[1]
+                ) !== -1
+            );
+        });
+    };
+
     const createGroup = async () => {
         const bodyObject = convertGroupData(groupData)
         const url = 'https://sig-fisi.application.ryonadev.me/api/Group'
+
+        if (verifySelectedHours()) {
+            messageMediator.showMessage('Los horarios seleccionados no son válidos...', 'error')
+            return
+        }
 
         try {
             await axios.post(url, bodyObject)

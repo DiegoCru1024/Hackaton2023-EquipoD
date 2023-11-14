@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {useParams} from 'react-router-dom';
 import axios from 'axios';
 import styles from './detailGroupStyles.module.scss';
 
 const DetailGroupComponent = () => {
-    const { id } = useParams();
+    const {id} = useParams();
     const [group, setGroup] = useState(null);
 
     useEffect(() => {
@@ -31,18 +31,18 @@ const DetailGroupComponent = () => {
                 <h1>Detalle del Grupo</h1>
                 <table className={styles.table}>
                     <tbody>
-                        <tr>
-                            <td><strong>Nombre Curso:</strong></td>
-                            <td>{group.courseName}</td>
-                            <td><strong>Semestre:</strong></td>
-                            <td>{group.semester}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Grupo:</strong></td>
-                            <td>{group.groupNumber}</td>
-                            <td><strong>Límite:</strong></td>
-                            <td>{group.limit}</td>
-                        </tr>
+                    <tr>
+                        <td><strong>Nombre Curso:</strong></td>
+                        <td>{group.courseName}</td>
+                        <td><strong>Semestre:</strong></td>
+                        <td>{group.semester}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Grupo:</strong></td>
+                        <td>{group.groupNumber}</td>
+                        <td><strong>Límite:</strong></td>
+                        <td>{group.limit}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -53,22 +53,26 @@ const DetailGroupComponent = () => {
                     <div key={index}>
                         <table className={styles.table}>
                             <tbody>
-                                <tr>
-                                    <td><strong>Día :</strong></td>
-                                    <td>{schedule.dayName}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Tipo de Dictado :</strong></td>
-                                    <td>{schedule.courseDictationTypeName}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Inicio:</strong></td>
-                                    <td>{schedule.startTime}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Fin:</strong></td>
-                                    <td>{schedule.endTime}</td>
-                                </tr>
+                            <tr>
+                                <td><strong>Día :</strong></td>
+                                <td>{schedule.dayName}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tipo de Dictado :</strong></td>
+                                <td>{schedule.courseDictationTypeName}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Inicio:</strong></td>
+                                <td>{schedule.startTime}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fin:</strong></td>
+                                <td>{schedule.endTime}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aula:</strong></td>
+                                <td>{schedule.classroomCode || 'SIN ASIGNAR'}</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

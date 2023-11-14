@@ -6,14 +6,14 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setUser} from "../../redux/userSlice";
 import axios from "axios";
-import MessageMediator from "../../mediators/messageMediator";
+import MessageFacade from "../../facades/messageFacade";
 
 const iconStyle = {color: "#002388", fontSize: 30, marginRight: 5};
 
 const LoginPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const messageMediator = new MessageMediator()
+    const messageMediator = new MessageFacade()
     const [waitingResponse, setWaitingResponse] = useState(false);
     const [loginData, setLoginData] = useState({
         email: "",

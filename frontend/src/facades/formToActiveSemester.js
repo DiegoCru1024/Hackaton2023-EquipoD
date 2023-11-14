@@ -1,8 +1,8 @@
 import React from 'react';
 
-const MyForm = ({ semesterOptions }) => {
+const SemesterForm = ({semesterOptions}) => {
     return (
-        <form style={{ padding: "10px" }}>
+        <form style={{padding: "10px"}}>
             <label htmlFor="selectOption">Selecciona un semestre:</label>
             <select id="selectOption" name="selectOption">
                 {semesterOptions.map((semester) => (
@@ -15,4 +15,4 @@ const MyForm = ({ semesterOptions }) => {
     );
 };
 
-export default MyForm;
+export default SemesterForm;
