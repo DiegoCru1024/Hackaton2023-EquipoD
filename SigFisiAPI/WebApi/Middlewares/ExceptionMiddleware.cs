@@ -29,6 +29,10 @@ public class ExceptionMiddleware
 
             switch (e)
             {
+                case ValidationException ve:
+                    response.StatusCode = (int) HttpStatusCode.BadRequest;
+                    errorResponse.Errors = ve.Errors;
+                    break;
                 case AppException:
                     response.StatusCode = (int) HttpStatusCode.BadRequest;
                     break;

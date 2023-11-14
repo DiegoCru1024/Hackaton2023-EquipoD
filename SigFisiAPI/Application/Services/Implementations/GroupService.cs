@@ -24,7 +24,7 @@ public class GroupService : IGroupService
         var course = await _unitOfWork.Courses.GetByIdAsync(createGroup.CourseId);
         if (course == null)
         {
-            throw new AppException("El id de curso no existe");
+            throw new NotFoundException(nameof(Course), createGroup.CourseId);
         }
 
         var expectedSchedulesQuantity = (await _unitOfWork.CourseHoursDictated.SearchCourseHoursDictated(course.Id)).Count();
@@ -70,7 +70,7 @@ public class GroupService : IGroupService
 
         if (group == null)
         {
-            throw new AppException("No se encontro la el grupo");
+            throw new NotFoundException(nameof(Group), id);
         }
 
         return _mapper.Map<GetGroupWithSchedules>(group);

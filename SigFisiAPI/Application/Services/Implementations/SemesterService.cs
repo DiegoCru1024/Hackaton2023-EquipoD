@@ -45,7 +45,7 @@ public class SemesterService : ISemesterService
 
         if (semester == null)
         {
-            throw new AppException("No se encontro la el grupo");
+            throw new NotFoundException(nameof(Semester), id);
         }
 
         return new GetSemester()

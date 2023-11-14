@@ -1,7 +1,9 @@
 using System.Reflection;
 using System.Text;
+using Application.Services;
 using Infrastructure.Identity.Data;
 using Infrastructure.Identity.Models;
+using Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +20,13 @@ public static class IdentityServicesExtension
     public static IServiceCollection AddIdentityServices(
         this IServiceCollection services, IConfiguration configuration)
     {
+        #region IdentityContext
 
         var connectionString = configuration.GetConnectionString("IdentityConnection");
         services.AddDbContext<IdentityContext>(options =>
         {
             options.UseMySql(
-                connectionString, ServerVersion.AutoDetect(connectionString) ,
+                connectionString, ServerVersion.AutoDetect(connectionString),
                 o =>
                 {
                     o.MigrationsHistoryTable(
@@ -46,6 +49,12 @@ public static class IdentityServicesExtension
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]!)),
                 ClockSkew = TimeSpan.Zero
             });
+
+        #endregion
+
+
+        services.AddTransient<IUserService, UserService>();
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         return services;
     }

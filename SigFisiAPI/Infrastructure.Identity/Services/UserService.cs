@@ -21,12 +21,13 @@ public class UserService : IUserService
     private readonly IConfiguration _configuration;
 
     public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper,
-        IConfiguration configuration)
+        IConfiguration configuration, IValidationService validationService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _mapper = mapper;
         _configuration = configuration;
+        _validationService = validationService;
     }
 
     public async Task<UserToken> CreateUser(RegisterUser model)
