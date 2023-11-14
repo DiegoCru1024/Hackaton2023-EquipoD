@@ -2,7 +2,15 @@ import styles from './sidebarStyles.module.scss'
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {clearUser} from "../../redux/userSlice";
-import {BiSolidBook, BiSolidGroup, BiSolidHome, BiSolidSchool, BiSolidUserCircle} from "react-icons/bi";
+import {
+    BiSolidBook,
+    BiSolidGroup,
+    BiSolidHome,
+    BiSolidSchool,
+    BiSolidTimeFive,
+    BiSolidUserCircle,
+    BiTimeFive
+} from "react-icons/bi";
 
 export default function SideBar() {
     const userData = useSelector((state) => state.userData)
@@ -38,6 +46,9 @@ export default function SideBar() {
                     </li>
                     <li><Link to={'/classroom'}>
                         <BiSolidSchool className={styles.navBarIcon}/> Aulas</Link>
+                    </li>
+                    <li><Link to={'/schedule'}>
+                        <BiSolidTimeFive className={styles.navBarIcon}/>Horarios</Link>
                     </li>
                 </ul>
             </div>

@@ -32,6 +32,9 @@ public class ExceptionMiddleware
                 case AppException:
                     response.StatusCode = (int) HttpStatusCode.BadRequest;
                     break;
+                case NotFoundException:
+                    response.StatusCode = (int) HttpStatusCode.NotFound;
+                    break;
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     _logger.LogError(e, e.Message);

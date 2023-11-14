@@ -11,6 +11,12 @@ public class GroupScheduleRepository : GenericRepository<GroupSchedule>, IGroupS
     {
     }
 
+    public override async Task<GroupSchedule?> GetByIdAsync(int id)
+    {
+        return await DbSet.Include(x => x.Group)
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
     public async Task<IEnumerable<GroupSchedule>> GetUnavailableSchedulesAsync(int groupNumber, int semester)
     {
         return await DbSet.Include(x => x.Group)
