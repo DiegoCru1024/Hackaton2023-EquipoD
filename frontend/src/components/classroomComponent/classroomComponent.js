@@ -9,7 +9,6 @@ export default function ClassroomComponent() {
         semesterName: '2023-II'
     })
 
-    const [classrooms, setClassrooms] = useState([])
     const [groupSchedules, setGroupSchedules] = useState([]);
     const messageFacade = new MessageFacade()
 
@@ -29,7 +28,7 @@ export default function ClassroomComponent() {
     const getClassroomsAvaible = async (id) => {
         try {
             const response = await axios.get(`/api/Classroom/GetAllAvailable/${id}`);
-            setClassrooms(response.data);
+            return response.data
 
         } catch (error) {
             console.error('Error fetching classrooms data:', error);
@@ -38,6 +37,7 @@ export default function ClassroomComponent() {
 
     const showModalDialog = async (idSchedule) => {
         const array = await getClassroomsAvaible(idSchedule)
+        console.log(array)
         messageFacade.openModalClassroom(array, idSchedule)
     }
 
