@@ -41,6 +41,21 @@ export default function CreateGroupComponent() {
 
             clearScreen()
         }
+
+        if (name === 'semesterID' || name === 'planID') {
+            getGroupNumber(value).then(() => {
+                console.log('Grupo recibido...')
+            })
+
+            clearScreen()
+            setGroupData((prevState) => ({
+                ...prevState,
+                courseID: 'invalid',
+                limit: 0,
+                groupNumber: 0,
+                groupSchedule: []
+            }))
+        }
     }
 
     const handleScheduleChange = async (e, duration) => {
@@ -259,7 +274,7 @@ export default function CreateGroupComponent() {
             <div className={styles.groupDataContainer}>
                 <div>
                     <label>Plan de Estudios:</label>
-                    <select name={'planID'} onChange={handleChange}>
+                    <select name={'planID'} onChange={handleChange} value={groupData.planID}>
                         <option value={'invalid'}>-- Seleccione un plan --</option>
                         {planArray.map((plan) => (
                             <option key={plan.id} value={plan.id}>{plan.code}</option>
@@ -268,7 +283,7 @@ export default function CreateGroupComponent() {
                 </div>
                 <div>
                     <label>Semestre:</label>
-                    <select name={'semesterID'} onChange={handleChange}>
+                    <select name={'semesterID'} onChange={handleChange} value={groupData.semesterID}>
                         <option value={'invalid'}>-- Seleccione un ciclo --</option>
                         <option value={1}>Ciclo I</option>
                         <option value={2}>Ciclo II</option>
@@ -284,7 +299,7 @@ export default function CreateGroupComponent() {
                 </div>
                 <div>
                     <label>Curso:</label>
-                    <select name={'courseID'} onChange={handleChange}>
+                    <select name={'courseID'} onChange={handleChange} value={groupData.courseID}>
                         <option value={'invalid'}>-- Seleccione un curso --</option>
                         {coursesArray.map((course) => (
                             <option key={course.id} value={course.id}>{course.name}</option>
@@ -294,7 +309,7 @@ export default function CreateGroupComponent() {
                 <div>
                     <label>Tope:</label>
                     <input type={'number'} min={0} max={100} placeholder={'Ingrese el tope del grupo...'}
-                           name={'limit'} onChange={handleChange}/>
+                           name={'limit'} onChange={handleChange} value={groupData.limit}/>
                 </div>
                 <div>
                     <label>Número de Grupo:</label>

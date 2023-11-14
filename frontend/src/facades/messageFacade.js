@@ -4,6 +4,7 @@ import SemesterForm from "./formToActiveSemester";
 import ClassroomForm from "./formToSelectClassroom";
 import axios from "axios";
 import React from "react";
+import Toast from "sweetalert2";
 
 class MessageFacade {
     showMessage = (message, type) => {
@@ -16,6 +17,25 @@ class MessageFacade {
         }).then(() => {
             console.log('Alerta enviada...')
         });
+    }
+
+    debug = async () => {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-right",
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+        })
+
+        await Toast.fire({
+            icon: 'error',
+            title: 'Completa todos los campos antes de continuar...',
+        })
     }
 
     messageSuccessCreated = () => {

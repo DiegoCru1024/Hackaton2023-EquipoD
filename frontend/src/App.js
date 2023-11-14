@@ -1,4 +1,5 @@
 import React from "react";
+import './globalStyles.scss';
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import SemesterComponent from "./components/semesterComponent/semesterComponent";
 import CreateSemesterComponent from "./components/semesterComponent/subComponents/createSemesterComponent";
@@ -7,12 +8,12 @@ import DetailSemesterComponent from "./components/semesterComponent/subComponent
 import Sidebar from "./components/sidebarComponent/sidebarComponent";
 import LoginComponent from "./components/loginComponent/loginComponent";
 import HomeComponent from "./components/homeComponent/homeComponent";
-import './globalStyles.scss';
 import GroupComponent from "./components/groupComponent/groupComponent";
 import CreateGroupComponent from "./components/groupComponent/subcomponents/createGroupComponent";
 import DetailGroupComponent from "./components/groupComponent/subcomponents/detailGroupComponent";
 import UpdateGroupComponent from "./components/groupComponent/subcomponents/updateGroupComponent";
 import ClassroomComponent from "./components/classroomComponent/classroomComponent";
+import ScheduleViewComponent from "./components/scheduleViewComponent/scheduleViewComponent";
 
 
 const SidebarLayout = ({children}) => (
@@ -104,6 +105,14 @@ function App() {
                     element={
                         <SidebarLayout>
                             <ClassroomComponent/>
+                        </SidebarLayout>
+                    }
+                />
+                <Route
+                    path={"/schedule"}
+                    element={
+                        <SidebarLayout>
+                            <ScheduleViewComponent/>
                         </SidebarLayout>
                     }
                 />
