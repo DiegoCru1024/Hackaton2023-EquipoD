@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './updateSemesterStyles.module.scss';
+import MessageMediator from '../../../mediators/messageMediator';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateSemesterComponent = () => {
+  const navigate = useNavigate();
+
+  const messageMediator = new MessageMediator()
   const { id } = useParams();
   const [semester, setSemester] = useState({
   });
@@ -21,8 +26,6 @@ const UpdateSemesterComponent = () => {
   const formatDate = (dateString) => {
     const dateObject = new Date(dateString);
     const formattedDate = dateObject.toISOString().split('T')[0];
-    console.log("Fecha después del fomato")
-    console.log(formatDate)
     return formattedDate;
   };
 
@@ -35,6 +38,7 @@ const UpdateSemesterComponent = () => {
   };
 
   const handleUpdateSemester = async (e) => {
+    let created = false;
     e.preventDefault();
 
     const formattedStartDate = formatDate(semester.startDate);
@@ -48,8 +52,14 @@ const UpdateSemesterComponent = () => {
 
     try {
       await axios.put(`https://sig-fisi.application.ryonadev.me/api/Semester/${id}`, updatedSemester);
+      created = true
     } catch (error) {
       console.error('Error updating semester:', error);
+    }
+
+    if (created) {
+      messageMediator.messageSuccessUpdated();
+      navigate(-1);
     }
   };
 
@@ -63,7 +73,7 @@ const UpdateSemesterComponent = () => {
             type="text"
             id="semesterName"
             name="code"
-            value={semester.code}
+            value={semester.code || ''}
             onChange={handleInputChange}
           />
         </div>
@@ -73,7 +83,7 @@ const UpdateSemesterComponent = () => {
             type="date"
             id="startDate"
             name="startDate"
-            value={semester.startDate}
+            value={semester.startDate ? semester.startDate.split('T')[0] : ''}
             onChange={handleInputChange}
           />
         </div>
@@ -83,12 +93,12 @@ const UpdateSemesterComponent = () => {
             type="date"
             id="endDate"
             name="endDate"
-            value={semester.endDate}
+            value={semester.endDate ? semester.endDate.split('T')[0] : ''}
             onChange={handleInputChange}
             required
           />
         </div>
-        <button style={{ backgroundColor: "#4caf50"}} type="submit">Actualizar Semestre</button>
+        <button style={{ backgroundColor: "#4caf50" }} type="submit">Editar Semestre</button>
       </form>
     </div>
   );
