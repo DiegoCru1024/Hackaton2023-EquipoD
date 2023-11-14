@@ -43,7 +43,7 @@ public class GroupScheduleController : ControllerBase
         return Ok(schedules);
     }
 
-    [HttpPost("AssignClassroom")]
+    [HttpPut("AssignClassroom/{scheduleId}/{classroomId}")]
     public async Task<IActionResult> AssignClassroom(int scheduleId, int classroomId)
     {
         var schedule = await _groupScheduleService.AssignClassroom(scheduleId, classroomId);

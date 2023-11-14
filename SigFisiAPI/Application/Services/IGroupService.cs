@@ -10,4 +10,5 @@ public interface IGroupService
     Task<IEnumerable<GetGroup>?> GetAllGroupsAsync();
     Task<IEnumerable<GetGroupNumber>?> GetNumberByStudyPlanAndSemesterAsync(int studyPlanId, int semester);
     Task<int> GetNextGroupNumberByCourseId(int courseId);
+    Task DeleteGroupAsync(int id);
 }

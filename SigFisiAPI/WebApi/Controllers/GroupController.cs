@@ -49,4 +49,8 @@ public class GroupController : ControllerBase
         var nextGroupNumber = await _groupService.GetNextGroupNumberByCourseId(courseId);
         return Ok(nextGroupNumber);
     }
+
+
+
+
 }

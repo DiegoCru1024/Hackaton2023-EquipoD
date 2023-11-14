@@ -96,6 +96,18 @@ public class GroupService : IGroupService
         return lastGroupNumber;
     }
 
+    public async Task DeleteGroupAsync(int id)
+    {
+        var group = await _unitOfWork.Groups.GetByIdAsync(id);
+        if (group == null)
+        {
+            throw new NotFoundException(nameof(Group), id);
+        }
+
+        await _unitOfWork.Groups.DeleteAsync(group);
+        await _unitOfWork.CommitAsync();
+    }
+
     private async Task<bool> ValidateGroupNumber(Group group)
     {
         var groupExists = await _unitOfWork.Groups.GetByNumberAndCourseId(group.Number, group.CourseId);
