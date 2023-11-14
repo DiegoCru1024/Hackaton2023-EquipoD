@@ -7,7 +7,7 @@ const ClassroomForm = ({ classroomOptions, idSchedule }) => {
       <select id="selectOption" name="selectOption">
         {classroomOptions.map((classroom) => (
           <option key={classroom.id} value={classroom.id}>
-            {classroom.id} - {classroom.code}
+            {classroom.code}
           </option>
         ))}
       </select>

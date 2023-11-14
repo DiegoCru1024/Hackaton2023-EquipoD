@@ -5,7 +5,7 @@ import {AiOutlineEye, AiOutlineEdit, AiOutlineDelete} from 'react-icons/ai';
 import MessageFacade from "../../facades/messageFacade";
 
 const SemesterComponent = () => {
-    const messageMediator = new MessageFacade();
+    const messageFacade = new MessageFacade();
     const [semesters, setSemesters] = useState([]);
 
     useEffect(() => {
@@ -41,8 +41,8 @@ const SemesterComponent = () => {
                 </button>
             </Link>
             <button className={'buttonAsign'}
-                    onClick={() => messageMediator.openModalSemester(semesters, () => fetchData())}>
-                Desginar Semestre Activo
+                    onClick={() => messageFacade.openModalSemester(semesters, () => fetchData())}>
+                Activar Semestre
             </button>
             <table>
                 <thead>
@@ -73,7 +73,7 @@ const SemesterComponent = () => {
                                 </button>
                             </Link>
                             <button title="Eliminar" className={'buttonDelete'}
-                                    onClick={() => messageMediator.showDeleteConfirmation(() => handleDeleteSemester(semester.id))}>
+                                    onClick={() => messageFacade.showDeleteConfirmation(() => handleDeleteSemester(semester.id))}>
                                 <AiOutlineDelete/>
                             </button>
                         </td>
