@@ -8,7 +8,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace Infrastructure.Persistence;
 
-public static class PersistenceServiceExtensions
+public static class PersistenceServicesExtensions
 {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services,
         IConfiguration configuration)

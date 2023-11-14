@@ -1,4 +1,5 @@
 using Application;
+using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using WebApi.Middlewares;
 
@@ -13,6 +14,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 
 #region CORS
 
