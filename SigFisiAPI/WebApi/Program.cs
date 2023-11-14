@@ -1,6 +1,7 @@
 using Application;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
+using Microsoft.OpenApi.Models;
 using WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,32 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
+
+builder.Services.AddSwaggerGen(c =>
+{
+    // ... Otras configuraciones de Swagger
+
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "JWT Authentication",
+        Description = "Enter JWT Bearer token",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer", // Use "bearer" as the scheme for JWT
+        BearerFormat = "JWT",
+        Reference = new OpenApiReference
+        {
+            Type = ReferenceType.SecurityScheme,
+            Id = "Bearer"
+        }
+    };
+
+    c.AddSecurityDefinition("Bearer", securityScheme);
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { securityScheme, new string[] { } }
+    });
+});
 
 #region CORS
 
