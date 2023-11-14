@@ -82,10 +82,10 @@ class MessageFacade {
         });
     };
 
-    openModalClassroom = (classrooms, getClassrooms) => {
+    openModalClassroom = (classroomsAvaibles) => {
         Swal.fire({
             title: 'Asignar Aula',
-            html: ReactDOMServer.renderToString(<ClassroomForm classroomOptions={classrooms}/>),
+            html: ReactDOMServer.renderToString(<ClassroomForm classroomOptions={classroomsAvaibles}/>),
             showCancelButton: true,
             confirmButtonText: 'Asignar',
             cancelButtonText: 'Cancelar',
@@ -94,18 +94,6 @@ class MessageFacade {
                 if (result.dismiss === Swal.DismissReason.cancel) {
                     return false;
                 }
-
-                const selectedSemesterCode = document.getElementById('selectOption').value;
-                const selectedSemester = classrooms.find((semester) => semester.code === selectedSemesterCode);
-
-                return axios.put(`https://sig-fisi.application.ryonadev.me/api/Semester/${selectedSemester.id}/Activate`, {})
-                    .then(() => {
-                        getClassrooms();
-                        return true;
-                    })
-                    .catch((error) => {
-                        console.error('Error al asignar aula:', error);
-                    });
             },
 
         });
