@@ -33,13 +33,11 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
             .ToListAsync();
     }
 
-    public async Task<List<int>> GetGroupNumbers(int studyPlanId, int semester)
+    public async Task<IEnumerable<Group>> GetGroupsByStudyPlanAndSemester(int studyPlanId, int semester)
     {
         var groupNumbers = await DbSet
             .Include(x => x.Course)
             .Where(x => x.Course.StudyPlanId == studyPlanId && x.Course.Semester == semester)
-            .Select(x => x.Number)
-            .Distinct()
             .ToListAsync();
 
         return groupNumbers;
@@ -54,11 +52,22 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
         return lastGroup?.Number + 1 ?? 1;
     }
 
-    public async Task<Group?> GetByNumberAndCourseId(int groupNumber, int groupCourseId)
+    public async Task<List<Group>> GetAllByCourseId(int courseId)
     {
         return await DbSet
             .Include(x => x.GroupSchedules)
             .Include(x => x.Course)
-            .FirstOrDefaultAsync(x => x.Number == groupNumber && x.CourseId == groupCourseId);
+            .Where(x => x.CourseId == courseId)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Group>> GetByNumberAndCourseId(int groupNumber, int groupCourseId)
+    {
+
+        return await DbSet
+            .Include(x => x.GroupSchedules)
+            .Include(x => x.Course)
+            .Where(x => x.Number == groupNumber && x.CourseId == groupCourseId)
+            .ToListAsync();
     }
 }

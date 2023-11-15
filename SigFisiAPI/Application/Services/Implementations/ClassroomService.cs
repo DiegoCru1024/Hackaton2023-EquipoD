@@ -19,12 +19,22 @@ public class ClassroomService : IClassroomService
 
     public async Task<IEnumerable<GetClassroom>> GetAllAvailableByScheduleId(int scheduleId)
     {
+        var activeSemester = await _unitOfWork.Semesters.GetActiveSemester();
+
+        if (activeSemester == null)
+        {
+            throw new AppException("No hay un semestre activo.");
+        }
+
+
         var schedule = await _unitOfWork.GroupSchedules.GetByIdAsync(scheduleId);
         if (schedule == null)
         {
             throw new NotFoundException(nameof(GroupSchedule), scheduleId);
         }
-        var classrooms = await _unitOfWork.Classrooms.GetAvailableClassroomsByScheduleAndCapacity(schedule.StartTime, schedule.EndTime, schedule.DayId, schedule.Group.Limit);
+
+        var classrooms = await _unitOfWork.Classrooms.GetAvailableClassroomsByScheduleAndCapacity(schedule.StartTime,
+            schedule.EndTime, schedule.DayId, schedule.Group.Limit, activeSemester.Id);
         return _mapper.Map<IEnumerable<GetClassroom>>(classrooms);
     }
 }

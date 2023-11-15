@@ -26,8 +26,18 @@ public class GroupScheduleService : IGroupScheduleService
 
     public async Task<IEnumerable<GetGroupSchedule>> SearchGroupSchedule(int groupNumber, int semester, int studyPlanId)
     {
-        var group = await _unitOfWork.GroupSchedules.SearchGroupSchedule(groupNumber, semester, studyPlanId);
-        return _mapper.Map<List<GetGroupSchedule>>(group);
+        var activeSemester = await _unitOfWork.Semesters.GetActiveSemester();
+
+        if (activeSemester == null)
+        {
+            throw new AppException("No hay un semestre activo.");
+        }
+
+        var groups = await _unitOfWork.GroupSchedules.SearchGroupSchedule(groupNumber, semester, studyPlanId);
+
+        groups = groups.Where(x => x.Group.SemesterId == activeSemester.Id);
+
+        return _mapper.Map<List<GetGroupSchedule>>(groups);
     }
 
     public async Task<IEnumerable<GetGroupSchedule>> GetUnavailableSchedules(int groupNumber, int semester)
@@ -47,6 +57,13 @@ public class GroupScheduleService : IGroupScheduleService
 
     public async Task<GetGroupSchedule> AssignClassroom(int scheduleId, int classroomId)
     {
+        var activeSemester = await _unitOfWork.Semesters.GetActiveSemester();
+
+        if (activeSemester == null)
+        {
+            throw new AppException("No hay un semestre activo");
+        }
+
         var schedule = await _unitOfWork.GroupSchedules.GetByIdAsync(scheduleId);
         if (schedule == null)
         {
@@ -59,7 +76,9 @@ public class GroupScheduleService : IGroupScheduleService
             throw new NotFoundException(nameof(Classroom), classroomId);
         }
 
-        var availableClassrooms = await _unitOfWork.Classrooms.GetAvailableClassroomsByScheduleAndCapacity(schedule.StartTime, schedule.EndTime, schedule.DayId, schedule.Group.Limit);
+        var availableClassrooms =
+            await _unitOfWork.Classrooms.GetAvailableClassroomsByScheduleAndCapacity(schedule.StartTime,
+                schedule.EndTime, schedule.DayId, schedule.Group.Limit, activeSemester.Id);
 
         var classroomIsAvailable = availableClassrooms.Any(x => x.Id == classroom.Id);
 
@@ -75,6 +94,13 @@ public class GroupScheduleService : IGroupScheduleService
 
     public async Task<GetGroupSchedule> UpdateClassroom(int scheduleId, int classroomId)
     {
+        var activeSemester = await _unitOfWork.Semesters.GetActiveSemester();
+
+        if (activeSemester == null)
+        {
+            throw new AppException("No hay un semestre activo");
+        }
+
         var schedule = await _unitOfWork.GroupSchedules.GetByIdAsync(scheduleId);
         if (schedule == null)
         {
@@ -87,7 +113,9 @@ public class GroupScheduleService : IGroupScheduleService
             throw new NotFoundException(nameof(Classroom), classroomId);
         }
 
-        var availableClassrooms = await _unitOfWork.Classrooms.GetAvailableClassroomsByScheduleAndCapacity(schedule.StartTime, schedule.EndTime, schedule.DayId, schedule.Group.Limit);
+        var availableClassrooms =
+            await _unitOfWork.Classrooms.GetAvailableClassroomsByScheduleAndCapacity(schedule.StartTime,
+                schedule.EndTime, schedule.DayId, schedule.Group.Limit, activeSemester.Id);
 
         var classroomIsAvailable = availableClassrooms.Any(x => x.Id == classroom.Id);
 
@@ -103,10 +131,20 @@ public class GroupScheduleService : IGroupScheduleService
 
     public async Task<IEnumerable<GetGroupSchedule>> GetSchedulesWithoutClassroom()
     {
+        var activeSemester = await _unitOfWork.Semesters.GetActiveSemester();
+
+        if (activeSemester == null)
+        {
+            throw new AppException("No hay un semestre activo");
+        }
+
+
         var schedules = (await _unitOfWork.GroupSchedules.GetSchedulesWithoutClassroom())
             .OrderBy(x => x.GroupId)
             .ThenBy(x => x.Group.Course)
-            .ThenBy(x => x.Group.Number);
+            .ThenBy(x => x.Group.Number)
+            .Where(x => x.Group.SemesterId == activeSemester.Id);
+
         return _mapper.Map<List<GetGroupSchedule>>(schedules);
     }
 }

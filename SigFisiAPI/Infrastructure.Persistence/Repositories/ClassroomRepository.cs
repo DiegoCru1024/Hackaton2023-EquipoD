@@ -11,9 +11,11 @@ public class ClassroomRepository : GenericRepository<Classroom>, IClassroomRepos
     {
     }
 
-    public async Task<IEnumerable<Classroom>> GetAvailableClassroomsByScheduleAndCapacity(TimeSpan startTime, TimeSpan endTime, int dayId, int capacity)
+    public async Task<IEnumerable<Classroom>> GetAvailableClassroomsByScheduleAndCapacity(TimeSpan startTime, TimeSpan endTime, int dayId, int capacity, int activeSemesterId)
     {
         return await DbSet.Include(x => x.GroupSchedules)
+            .ThenInclude(x => x.Group)
+            .Where(x => x.GroupSchedules.All(x => x.Group.SemesterId == activeSemesterId))
             .Where(x => !x.GroupSchedules.Any(y =>
                 y.DayId == dayId &&
                 (startTime > y.EndTime || endTime < y.StartTime)

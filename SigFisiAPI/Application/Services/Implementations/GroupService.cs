@@ -20,23 +20,25 @@ public class GroupService : IGroupService
 
     public async Task<GetGroupWithSchedules> CreateGroupAsync(CreateGroup createGroup)
     {
-
         var course = await _unitOfWork.Courses.GetByIdAsync(createGroup.CourseId);
         if (course == null)
         {
             throw new NotFoundException(nameof(Course), createGroup.CourseId);
         }
 
-        var expectedSchedulesQuantity = (await _unitOfWork.CourseHoursDictated.SearchCourseHoursDictated(course.Id)).Count();
+        var expectedSchedulesQuantity =
+            (await _unitOfWork.CourseHoursDictated.SearchCourseHoursDictated(course.Id)).Count();
         if (createGroup.GroupSchedules.Count != expectedSchedulesQuantity)
         {
             throw new AppException("Se debe ingresar todos los horarios del curso");
         }
+
         var semester = await _unitOfWork.Semesters.GetActiveSemester();
         if (semester == null)
         {
             throw new AppException("No hay un semestre activo");
         }
+
         var group = _mapper.Map<Group>(createGroup);
         group.SemesterId = semester.Id;
 
@@ -58,6 +60,7 @@ public class GroupService : IGroupService
                 throw new AppException("El horario no es valido");
             }
         }
+
         group.GroupSchedules = groupSchedules;
         var createdGroup = await _unitOfWork.Groups.AddAsync(group);
         await _unitOfWork.CommitAsync();
@@ -78,22 +81,53 @@ public class GroupService : IGroupService
 
     public async Task<IEnumerable<GetGroup>?> GetAllGroupsAsync()
     {
+        var activeSemester = await _unitOfWork.Semesters.GetActiveSemester();
+
+        if (activeSemester == null)
+        {
+            throw new AppException("No hay un semestre activo");
+        }
+
         var groups = await _unitOfWork.Groups.GetAllAsync();
+
+        groups = groups.Where(x => x.SemesterId == activeSemester.Id);
 
         return _mapper.Map<List<GetGroup>>(groups);
     }
 
     public async Task<IEnumerable<GetGroupNumber>?> GetNumberByStudyPlanAndSemesterAsync(int studyPlanId, int semester)
     {
-        var groups = await _unitOfWork.Groups.GetGroupNumbers(studyPlanId, semester);
+        var activeSemester = await _unitOfWork.Semesters.GetActiveSemester();
 
-        return _mapper.Map<List<GetGroupNumber>>(groups);
+        if (activeSemester == null)
+        {
+            throw new AppException("No hay un semestre activo");
+        }
+
+
+        var groups = await _unitOfWork.Groups.GetGroupsByStudyPlanAndSemester(studyPlanId, semester);
+
+        var groupsNumbers = groups.Where(x => x.SemesterId == activeSemester.Id)
+            .Select(x => x.Number)
+            .Distinct();
+
+        return _mapper.Map<List<GetGroupNumber>>(groupsNumbers);
     }
 
     public async Task<int> GetNextGroupNumberByCourseId(int courseId)
     {
-        var lastGroupNumber = await _unitOfWork.Groups.GetNextNumberByCourseId(courseId);
-        return lastGroupNumber;
+        var activeSemester = await _unitOfWork.Semesters.GetActiveSemester();
+
+        if (activeSemester == null)
+        {
+            throw new AppException("No hay un semestre activo");
+        }
+
+
+        var lastGroup = (await _unitOfWork.Groups.GetAllByCourseId(courseId))
+            .Where(x => x.SemesterId == activeSemester.Id).MaxBy(x => x.Number);
+
+        return lastGroup?.Number + 1 ?? 1;;
     }
 
     public async Task DeleteGroupAsync(int id)
@@ -110,18 +144,41 @@ public class GroupService : IGroupService
 
     private async Task<bool> ValidateGroupNumber(Group group)
     {
-        var groupExists = await _unitOfWork.Groups.GetByNumberAndCourseId(group.Number, group.CourseId);
+        var activeSemester = await _unitOfWork.Semesters.GetActiveSemester();
+
+        if (activeSemester == null)
+        {
+            throw new AppException("No hay un semestre activo");
+        }
+
+
+        var groups = await _unitOfWork.Groups.GetByNumberAndCourseId(group.Number, group.CourseId);
+        var groupExists = groups.FirstOrDefault(x => x.SemesterId == activeSemester.Id);
+
         return groupExists == null;
     }
 
-    private async Task<bool> ValidateGroupSchedule(GroupSchedule newGroupSchedule,int groupNumber, int semester)
+    private async Task<bool> ValidateGroupSchedule(GroupSchedule newGroupSchedule, int groupNumber, int semester)
     {
-        var unavailableSchedulesInDay = await _unitOfWork.GroupSchedules.GetUnavailableSchedulesByDayAsync(groupNumber, semester, newGroupSchedule.DayId);
+        var activeSemester = await _unitOfWork.Semesters.GetActiveSemester();
+
+        if (activeSemester == null)
+        {
+            throw new AppException("No hay un semestre activo");
+        }
+
+        var unavailableSchedulesInDay =
+            await _unitOfWork.GroupSchedules.GetUnavailableSchedulesByDayAsync(groupNumber, semester,
+                newGroupSchedule.DayId);
+
+        unavailableSchedulesInDay = unavailableSchedulesInDay.Where(x => x.Group.SemesterId == activeSemester.Id);
+
         foreach (var schedule in unavailableSchedulesInDay)
         {
-            if(!(newGroupSchedule.EndTime <= schedule.StartTime || newGroupSchedule.StartTime >= schedule.EndTime))
+            if (!(newGroupSchedule.EndTime <= schedule.StartTime || newGroupSchedule.StartTime >= schedule.EndTime))
                 return false;
         }
+
         return true;
     }
 }
