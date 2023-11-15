@@ -1,13 +1,14 @@
 import styles from './groupStyles.module.scss'
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "../../axios/axiosInstance";
-import { Link } from "react-router-dom";
-import { AiOutlineEye, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
+import {Link} from "react-router-dom";
+import {AiOutlineEye, AiOutlineEdit, AiOutlineDelete} from 'react-icons/ai';
 import MessageFacade from "../../facades/messageFacade";
+import {useSelector} from "react-redux";
 
 export default function GroupComponent() {
     const [semesterInfo, setSemesterInfo] = useState({});
-
+    const userRole = useSelector((state) => state.userData.role)
     const messageFacade = new MessageFacade();
     const [groups, setGroups] = useState([]);
 
@@ -52,46 +53,51 @@ export default function GroupComponent() {
             <div className={styles.semesterInfoContainer}>
                 <div>
                     <label>Semestre Activo</label>
-                    <input type={'text'} readOnly={true} value={semesterInfo.code} />
+                    <input type={'text'} readOnly={true} value={semesterInfo.code}/>
                 </div>
-                <Link to={'/group/create'}>
-                    <button className={'buttonCreate'} >Crear Grupo</button>
-                </Link>
+                {userRole === 'Decanato' && (<>
+                    <Link to={'/group/create'}>
+                        <button className={'buttonCreate'}>Crear Grupo</button>
+                    </Link>
+                </>)}
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th>Nombre Curso</th>
-                        <th>Semestre</th>
-                        <th>Grupo</th>
-                        <th>Límite</th>
-                        <th>Acciones</th>
-                    </tr>
+                <tr>
+                    <th>Nombre Curso</th>
+                    <th>Semestre</th>
+                    <th>Grupo</th>
+                    <th>Límite</th>
+                    <th>Acciones</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {groups.map((group) => (
-                        <tr key={group.id}>
-                            <td>{group.courseName}</td>
-                            <td>{group.semester}</td>
-                            <td>{group.groupNumber}</td>
-                            <td>{group.limit}</td>
-                            <td>
-                                <Link to={`/group/details/${group.id}`}>
-                                    <button className={'buttonDetail'}>
-                                        <AiOutlineEye />
-                                    </button>
-                                </Link>
+                {groups.map((group) => (
+                    <tr key={group.id}>
+                        <td>{group.courseName}</td>
+                        <td>{group.semester}</td>
+                        <td>{group.groupNumber}</td>
+                        <td>{group.limit}</td>
+                        <td>
+                            <Link to={`/group/details/${group.id}`}>
+                                <button className={'buttonDetail'}>
+                                    <AiOutlineEye/>
+                                </button>
+                            </Link>
+                            {userRole === 'Decanato' && (<>
                                 <Link to={`/group/update/${group.id}`}>
                                     <button className={'buttonUpdate'}>
-                                        <AiOutlineEdit />
+                                        <AiOutlineEdit/>
                                     </button>
                                 </Link>
-                                <button className={'buttonDelete'} onClick={() => messageFacade.showDeleteConfirmation(() => handleDeleteGroup(group.id))}>
-                                    <AiOutlineDelete />
+                                <button className={'buttonDelete'}
+                                        onClick={() => messageFacade.showDeleteConfirmation(() => handleDeleteGroup(group.id))}>
+                                    <AiOutlineDelete/>
                                 </button>
-                            </td>
-                        </tr>
-                    ))}
+                            </>)}
+                        </td>
+                    </tr>
+                ))}
                 </tbody>
             </table>
         </div>
