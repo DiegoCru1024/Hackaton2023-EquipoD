@@ -1,16 +1,21 @@
-import ScheduleComponent from "../groupComponent/subcomponents/scheduleComponent";
 import styles from "./scheduleViewStyles.module.scss";
 import React, {useEffect, useState} from "react";
 import axios from "../../axios/axiosInstance";
 import GroupScheduleComponent from "./groupScheduleComponent";
+import MessageFacade from "../../facades/messageFacade";
 
 export default function ScheduleViewComponent() {
+    const messageFacade = new MessageFacade()
     const [scheduleData, setScheduleData] = useState({
         planId: 'invalid',
         semesterId: 'invalid',
         groupNumber: 'invalid'
     })
     const [schedulesArray, setSchedulesArray] = useState([])
+    const [scheduleTableData, setScheduleTableData] = useState({
+        indexes: [],
+        labels: []
+    })
     const [planArray, setPlanArray] = useState([])
     const [groupNumbers, setGroupNumbers] = useState([])
 
@@ -43,7 +48,12 @@ export default function ScheduleViewComponent() {
     }
 
     const getGroupSchedules = async () => {
-        const url = `api/GroupSchedule/Search?groupNumber=${scheduleData.groupNumber}&semester=${scheduleData.semesterId}&studyPlanId=${scheduleData.planId}`
+        const url = `/api/GroupSchedule/Search?groupNumber=${scheduleData.groupNumber}&semester=${scheduleData.semesterId}&studyPlanId=${scheduleData.planId}`
+
+        if (scheduleData.groupNumber === 'invalid') {
+            messageFacade.showMessage('Ingresa un grupo válido...', 'error')
+            return
+        }
 
         try {
             const response = await axios.get(url)
@@ -53,6 +63,32 @@ export default function ScheduleViewComponent() {
         }
 
     }
+
+    const updateHours = () => {
+        let cellIndexes = [];
+        let indexLabels = [];
+
+        for (const schedule of schedulesArray) {
+            if (schedule.startTime !== undefined && schedule.endTime !== undefined && schedule.dayId !== undefined) {
+                const startHour = parseInt(schedule.startTime);
+                const dayNumber = parseInt(schedule.dayId) - 1;
+
+                for (let i = 0; i < schedule.endTime - startHour; i++) {
+                    cellIndexes.push([startHour + i - 8, dayNumber]);
+                    indexLabels.push(schedule.courseName);
+                }
+            }
+        }
+
+        setScheduleTableData({
+            indexes: cellIndexes,
+            labels: indexLabels
+        });
+    };
+
+    useEffect(() => {
+        updateHours()
+    }, [schedulesArray])
 
     useEffect(() => {
         if (scheduleData.planId !== 'invalid' && scheduleData.semesterId !== 'invalid') {
@@ -109,8 +145,7 @@ export default function ScheduleViewComponent() {
                 <button onClick={getGroupSchedules}>Buscar horario</button>
             </div>
 
-            <GroupScheduleComponent/>
-            <ScheduleComponent blockedHours={[]} selectedObject={{indexes: [], labels: []}}/>
+            <GroupScheduleComponent selectedObject={scheduleTableData}/>
         </div>
     )
 }

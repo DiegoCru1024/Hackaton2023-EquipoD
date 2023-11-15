@@ -4,3 +4,50 @@
   column-gap: 50px;
   margin: 50px 0;
 }
+
+.schedulePreview {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+
+      p {
+        font-size: 1rem;
+        text-align: center;
+      }
+    }
+
+    th {
+      background-color: #002388;
+      color: white;
+    }
+
+    th:first-child,
+    td:first-child {
+      width: 10%; // Ancho fijo para la primera columna
+    }
+
+    th:not(:first-child),
+    td:not(:first-child) {
+      width: calc((100% - 10%) / 6); // Distribuir el resto del ancho entre las demás columnas
+    }
+  }
+}
+
+.redCell {
+  background: #ed99a1;
+}
+
+.greenCell {
+  background: #84e19a;
+
+  p {
+    font-size: 1rem;
+    margin: 0;
+  }
+}
