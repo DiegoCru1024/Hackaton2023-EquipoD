@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import axios from 'axios';
+import axios from "../../../axios/axiosInstance";
 import styles from './createSemesterStyles.module.scss';
 import MessageFacade from '../../../facades/messageFacade';
 import {useNavigate} from 'react-router-dom';
@@ -32,7 +32,7 @@ const CreateSemesterComponent = () => {
         };
 
         try {
-            const response = await axios.post('https://sig-fisi.application.ryonadev.me/api/Semester', newSemester);
+            const response = await axios.post('/api/Semester', newSemester);
             console.log('Semester created successfully:', response.data);
             setSemesterName('');
             setStartDate('');
@@ -43,7 +43,7 @@ const CreateSemesterComponent = () => {
         }
 
         if (created) {
-            messageMediator.messageSuccessCreated();
+            messageMediator.showConformationToast('El registro se creó con éxito');
             navigate(-1);
         }
     }

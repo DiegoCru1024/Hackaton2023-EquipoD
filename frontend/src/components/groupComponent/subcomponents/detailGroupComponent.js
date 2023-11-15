@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import axios from 'axios';
+import axios from "../../../axios/axiosInstance";
 import styles from './detailGroupStyles.module.scss';
 
 const DetailGroupComponent = () => {
@@ -10,7 +10,7 @@ const DetailGroupComponent = () => {
     useEffect(() => {
         const fetchGroupDetails = async () => {
             try {
-                const response = await axios.get(`https://sig-fisi.application.ryonadev.me/api/Group/${id}`);
+                const response = await axios.get(`/api/Group/${id}`);
                 setGroup(response.data);
             } catch (error) {
                 console.error('Error fetching group details:', error);

@@ -1,0 +1,6 @@
+.scheduleDataContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 50px;
+  margin: 50px 0;
+}

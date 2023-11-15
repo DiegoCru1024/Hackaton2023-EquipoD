@@ -1,6 +1,6 @@
 import styles from "./createGroupStyles.module.scss";
-import axios from "axios";
-import {useEffect, useState} from "react";
+import axios from "../../../axios/axiosInstance";
+import React, {useEffect, useState} from "react";
 import MessageFacade from "../../../facades/messageFacade";
 import ScheduleComponent from "./scheduleComponent";
 import {useNavigate} from "react-router-dom";
@@ -84,7 +84,7 @@ export default function CreateGroupComponent() {
 
     const getPlans = async () => {
         try {
-            const response = await axios.get('https://sig-fisi.application.ryonadev.me/api/StudyPlan/All')
+            const response = await axios.get('/api/StudyPlan/All')
             setPlanArray(response.data)
         } catch (error) {
             console.log(error)
@@ -92,8 +92,8 @@ export default function CreateGroupComponent() {
     }
 
     const getSchedule = async () => {
-        const url = `https://sig-fisi.application.ryonadev.me/api/CourseHoursDictated?courseId=${groupData.courseID}`
-        const url2 = `https://sig-fisi.application.ryonadev.me/api/GroupSchedule/GetAllUnavailable?groupNumber=${groupData.groupNumber}&semester=${groupData.semesterID}`
+        const url = `/api/CourseHoursDictated?courseId=${groupData.courseID}`
+        const url2 = `/api/GroupSchedule/GetAllUnavailable?groupNumber=${groupData.groupNumber}&semester=${groupData.semesterID}`
         const hasInvalidValue = Object.values(groupData).some((value) => value === 'invalid' || value === '0');
 
         if (hasInvalidValue) {
@@ -113,7 +113,7 @@ export default function CreateGroupComponent() {
     };
 
     const getCourses = async () => {
-        const url = `https://sig-fisi.application.ryonadev.me/api/Course/Search?studyPlanId=${groupData.planID}&semester=${groupData.semesterID}`
+        const url = `/api/Course/Search?studyPlanId=${groupData.planID}&semester=${groupData.semesterID}`
 
         try {
             const response = await axios.get(url)
@@ -124,7 +124,7 @@ export default function CreateGroupComponent() {
     }
 
     const getGroupNumber = async (courseGetId) => {
-        const url = `https://sig-fisi.application.ryonadev.me/api/Group/NextGroupNumber/${courseGetId}`
+        const url = `/api/Group/NextGroupNumber/${courseGetId}`
 
         try {
             const response = await axios.get(url)
@@ -222,7 +222,7 @@ export default function CreateGroupComponent() {
 
     const createGroup = async () => {
         const bodyObject = convertGroupData(groupData)
-        const url = 'https://sig-fisi.application.ryonadev.me/api/Group'
+        const url = '/api/Group'
 
         if (verifySelectedHours()) {
             messageMediator.showMessage('Los horarios seleccionados no son válidos...', 'error')
@@ -358,6 +358,7 @@ export default function CreateGroupComponent() {
                         </div>
                     ))}
 
+                    <h1>Resultado</h1>
                     <ScheduleComponent blockedHours={blockedHours} selectedObject={selectedHours}/>
 
                     <button type={'button'} onClick={createGroup}>Enviar</button>

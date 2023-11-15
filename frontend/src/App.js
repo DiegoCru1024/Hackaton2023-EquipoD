@@ -14,7 +14,8 @@ import DetailGroupComponent from "./components/groupComponent/subcomponents/deta
 import UpdateGroupComponent from "./components/groupComponent/subcomponents/updateGroupComponent";
 import ClassroomComponent from "./components/classroomComponent/classroomComponent";
 import ScheduleViewComponent from "./components/scheduleViewComponent/scheduleViewComponent";
-
+import NotFoundComponent from "./components/notFoundComponent/notFoundComponent";
+import {useSelector} from "react-redux";
 
 const SidebarLayout = ({children}) => (
     <div className={"appContainer"}>
@@ -24,98 +25,130 @@ const SidebarLayout = ({children}) => (
 );
 
 function App() {
+    const userRole = useSelector((state) => state.userData.role)
+
     return (
         <Router>
             <Routes>
                 <Route path={"/"} element={<LoginComponent/>}/>
-                <Route
-                    path={"/home"}
-                    element={
-                        <SidebarLayout>
-                            <HomeComponent/>
-                        </SidebarLayout>
-                    }
-                />
-                <Route
-                    path={"/semester"}
-                    element={
-                        <SidebarLayout>
-                            <SemesterComponent/>
-                        </SidebarLayout>
-                    }
-                />
-                <Route
-                    path={"/semester/create"}
-                    element={
-                        <SidebarLayout>
-                            <CreateSemesterComponent/>
-                        </SidebarLayout>
-                    }
-                />
-                <Route
-                    path={"/semester/details/:id"}
-                    element={
-                        <SidebarLayout>
-                            <DetailSemesterComponent/>
-                        </SidebarLayout>
-                    }
-                />
-                <Route
-                    path={"/semester/update/:id"}
-                    element={
-                        <SidebarLayout>
-                            <UpdateSemesterComponent/>
-                        </SidebarLayout>
-                    }
-                />
-                <Route
-                    path={"/group"}
-                    element={
-                        <SidebarLayout>
-                            <GroupComponent/>
-                        </SidebarLayout>
-                    }
-                />
-                <Route
-                    path={"/group/create"}
-                    element={
-                        <SidebarLayout>
-                            <CreateGroupComponent/>
-                        </SidebarLayout>
-                    }
-                />
-                <Route
-                    path={"/group/details/:id"}
-                    element={
-                        <SidebarLayout>
-                            <DetailGroupComponent/>
-                        </SidebarLayout>
-                    }
-                />
-                <Route
-                    path={"/group/update/:groupID"}
-                    element={
-                        <SidebarLayout>
-                            <UpdateGroupComponent/>
-                        </SidebarLayout>
-                    }
-                />
-                <Route
-                    path={"/classroom"}
-                    element={
-                        <SidebarLayout>
-                            <ClassroomComponent/>
-                        </SidebarLayout>
-                    }
-                />
-                <Route
-                    path={"/schedule"}
-                    element={
-                        <SidebarLayout>
-                            <ScheduleViewComponent/>
-                        </SidebarLayout>
-                    }
-                />
+
+                {userRole !== '' && (<>
+                    <Route
+                        path={"/home"}
+                        element={
+                            <SidebarLayout>
+                                <HomeComponent/>
+                            </SidebarLayout>
+                        }
+                    />
+
+                    {userRole === 'Decanato' && (
+                        <>
+                            <Route
+                                path={"/semester"}
+                                element={
+                                    <SidebarLayout>
+                                        <SemesterComponent/>
+                                    </SidebarLayout>
+                                }
+                            />
+                            <Route
+                                path={"/semester/create"}
+                                element={
+                                    <SidebarLayout>
+                                        <CreateSemesterComponent/>
+                                    </SidebarLayout>
+                                }
+                            />
+                            <Route
+                                path={"/semester/details/:id"}
+                                element={
+                                    <SidebarLayout>
+                                        <DetailSemesterComponent/>
+                                    </SidebarLayout>
+                                }
+                            />
+                            <Route
+                                path={"/semester/update/:id"}
+                                element={
+                                    <SidebarLayout>
+                                        <UpdateSemesterComponent/>
+                                    </SidebarLayout>
+                                }
+                            />
+                            <Route
+                                path={"/group"}
+                                element={
+                                    <SidebarLayout>
+                                        <GroupComponent/>
+                                    </SidebarLayout>
+                                }
+                            />
+                            <Route
+                                path={"/group/create"}
+                                element={
+                                    <SidebarLayout>
+                                        <CreateGroupComponent/>
+                                    </SidebarLayout>
+                                }
+                            />
+                            <Route
+                                path={"/group/details/:id"}
+                                element={
+                                    <SidebarLayout>
+                                        <DetailGroupComponent/>
+                                    </SidebarLayout>
+                                }
+                            />
+                            <Route
+                                path={"/group/update/:groupID"}
+                                element={
+                                    <SidebarLayout>
+                                        <UpdateGroupComponent/>
+                                    </SidebarLayout>
+                                }
+                            />
+                        </>
+                    )}
+
+                    {userRole === 'Administrativo' && (<>
+                        <Route
+                            path={"/group"}
+                            element={
+                                <SidebarLayout>
+                                    <GroupComponent/>
+                                </SidebarLayout>
+                            }
+                        />
+                        <Route
+                            path={"/group/details/:id"}
+                            element={
+                                <SidebarLayout>
+                                    <DetailGroupComponent/>
+                                </SidebarLayout>
+                            }
+                        />
+                        <Route
+                            path={"/classroom"}
+                            element={
+                                <SidebarLayout>
+                                    <ClassroomComponent/>
+                                </SidebarLayout>
+                            }
+                        />
+                    </>)}
+
+                    <Route
+                        path={"/schedule"}
+                        element={
+                            <SidebarLayout>
+                                <ScheduleViewComponent/>
+                            </SidebarLayout>
+                        }
+                    />
+                </>)}
+
+                <Route path="*" element={<NotFoundComponent/>}/>
             </Routes>
         </Router>
     );
