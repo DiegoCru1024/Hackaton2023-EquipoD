@@ -57,7 +57,7 @@ export default function GroupComponent() {
                 </div>
                 {userRole === 'Decanato' && (<>
                     <Link to={'/group/create'}>
-                        <button className={'buttonCreate'}>Crear Grupo</button>
+                        <button npm className={'buttonCreate'}>Crear Grupo</button>
                     </Link>
                 </>)}
             </div>
